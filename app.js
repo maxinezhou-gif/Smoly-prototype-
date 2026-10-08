@@ -47,7 +47,8 @@
     stage: $('sheetStage'), wave: $('sheetWave'), hint: $('sheetHint'), timer: $('sheetTimer'),
     undo: $('sheetUndo'), dial: $('dial'), dialInner: $('dialInner'), dialIcon: $('dialIcon'),
     actions: $('sheetActions'), recordNext: $('recordNextBtn'), linkSticker: $('linkStickerBtn'),
-    menu: $('tileMenu'), toast: $('toast')
+    menu: $('tileMenu'), toast: $('toast'), device: $('device'),
+    changePhoto: $('changePhotoBtn'), coverImg: $('coverImg'), coverInput: $('coverInput')
   };
 
   /* ── state ────────────────────────────────────────────── */
@@ -496,26 +497,42 @@
     el.seqSwitch.setAttribute('aria-checked', String(!on));
   });
 
-  /* ── overflow menu ────────────────────────────────────── */
-  function openMenu(tile, anchor) {
-    const items = tile.status === 'no-audio'
-      ? [['edit', 'Change name'], ['mic', 'Record audio']]
-      : [['edit', 'Change name'], ['mic', 'Record again'], ['sell', 'Link to a sticker']];
-    if (!tile.isFront) items.push(['delete', 'Delete', true]);
+  /* ── popovers ─────────────────────────────────────────── */
 
-    el.menu.innerHTML = items.map(([icon, label, danger]) =>
-      `<button class="md-menu-item${danger ? ' md-menu-item--danger' : ''}" data-action="${label}">
-         <span class="ms">${icon}</span>${label}
+  /* Shared plumbing for the tile overflow and the cover picker. `align` is how
+     the menu lines up with its anchor: "end" hangs off the right edge, "center"
+     sits under the middle of it. Either way it stays 16 inside the frame. */
+  function showMenu(items, anchor, align) {
+    el.menu.innerHTML = items.map((it) =>
+      `<button class="md-menu-item${it.danger ? ' md-menu-item--danger' : ''}" data-action="${it.label}">
+         <span class="ms">${it.icon}</span>${it.label}
        </button>`).join('');
 
     const box = anchor.getBoundingClientRect();
-    const frame = document.getElementById('device').getBoundingClientRect();
+    const frame = el.device.getBoundingClientRect();
     el.menu.hidden = false;
-    const top = Math.min(box.bottom - frame.top + 4, frame.height - el.menu.offsetHeight - 16);
-    el.menu.style.top = top + 'px';
-    el.menu.style.left = (box.right - frame.left - 200) + 'px';
 
-    el.menu.querySelectorAll('.md-menu-item').forEach((btn) => {
+    const w = el.menu.offsetWidth;
+    const raw = align === 'center'
+      ? box.left - frame.left + (box.width - w) / 2
+      : box.right - frame.left - w;
+
+    el.menu.style.left = Math.round(Math.max(16, Math.min(raw, frame.width - w - 16))) + 'px';
+    el.menu.style.top = Math.round(
+      Math.min(box.bottom - frame.top + 4, frame.height - el.menu.offsetHeight - 16)
+    ) + 'px';
+
+    return el.menu.querySelectorAll('.md-menu-item');
+  }
+
+  function openMenu(tile, anchor) {
+    const items = tile.status === 'no-audio'
+      ? [{ icon: 'edit', label: 'Change name' }, { icon: 'mic', label: 'Record audio' }]
+      : [{ icon: 'edit', label: 'Change name' }, { icon: 'mic', label: 'Record again' },
+         { icon: 'sell', label: 'Link to a sticker' }];
+    if (!tile.isFront) items.push({ icon: 'delete', label: 'Delete', danger: true });
+
+    showMenu(items, anchor, 'end').forEach((btn) => {
       btn.addEventListener('click', () => {
         const action = btn.dataset.action;
         closeMenu();
@@ -531,10 +548,52 @@
       });
     });
   }
-  function closeMenu() { el.menu.hidden = true; }
+  /* iOS raises these three from one native sheet; the design asks for them as an
+     explicit menu, so they are drawn rather than delegated to the OS. All three
+     end at the same file input — "Take a photo" adds `capture` so a phone opens
+     the camera rather than the gallery. */
+  function openCoverMenu(anchor) {
+    const items = [
+      { icon: 'photo_library', label: 'Photo library' },
+      { icon: 'photo_camera',  label: 'Take a photo' },
+      { icon: 'folder',        label: 'Choose file' }
+    ];
+    anchor.setAttribute('aria-expanded', 'true');
+    showMenu(items, anchor, 'center').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        closeMenu();
+        if (btn.dataset.action === 'Take a photo') el.coverInput.setAttribute('capture', 'environment');
+        else el.coverInput.removeAttribute('capture');
+        el.coverInput.click();
+      });
+    });
+  }
+
+  el.changePhoto.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (el.menu.hidden) openCoverMenu(el.changePhoto); else closeMenu();
+  });
+
+  let coverUrl = null;
+  el.coverInput.addEventListener('change', () => {
+    const file = el.coverInput.files && el.coverInput.files[0];
+    el.coverInput.value = '';          // so picking the same file twice still fires
+    if (!file) return;
+    if (coverUrl) URL.revokeObjectURL(coverUrl);
+    coverUrl = URL.createObjectURL(file);
+    el.coverImg.src = coverUrl;
+    toast('Cover updated');
+  });
+
+  function closeMenu() {
+    el.menu.hidden = true;
+    el.changePhoto.setAttribute('aria-expanded', 'false');
+  }
   document.addEventListener('click', (e) => {
     if (!el.menu.hidden && !el.menu.contains(e.target)) closeMenu();
   });
+  // the menu is placed against the frame, so it would hang in mid-air on scroll
+  el.screen.addEventListener('scroll', () => { if (!el.menu.hidden) closeMenu(); });
 
   /* ── toast ────────────────────────────────────────────── */
   let toastTimer = null;

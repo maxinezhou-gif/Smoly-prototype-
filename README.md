@@ -129,6 +129,16 @@ player from `831:28243` — scrubber, elapsed / remaining, and `replay_5` · pla
 re-recording stops playback. Tiles still on *No audio* do not expand, since there is
 nothing to play — use **Record audio** in their overflow menu.
 
+**The bulk pair under the list** is present whenever there is a list and no sheet in the
+way. The primary is always live. The secondary counts the recordings still waiting for a
+sticker — `Link sticker` disabled at none, then `Link 1 sticker`, then `Link n stickers`.
+Already-linked recordings are not counted.
+
+**Changing the cover.** *Change photo* opens a menu — Photo library · Take a photo ·
+Choose file — all three landing on one file input, with `capture` added for the camera
+route. Picking an image swaps the cover for real, so the prototype demos with the right
+book. See `decisions.html` for why the menu is drawn rather than left to the OS sheet.
+
 ## Motion and timing rules
 
 - **The tile is always seen before the sheet.** Every entry point adds the tile, lets it

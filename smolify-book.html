@@ -345,9 +345,13 @@
 
       <!-- cover -->
       <div class="cover">
-        <img src="assets/cover.png" alt="Book cover">
-        <button class="md-btn md-btn--sm md-btn--tonal">Change photo</button>
+        <img src="assets/cover.png" alt="Book cover" id="coverImg">
+        <button class="md-btn md-btn--sm md-btn--tonal" id="changePhotoBtn"
+                aria-haspopup="menu" aria-expanded="false">Change photo</button>
       </div>
+      <!-- all three menu options land here; "Take a photo" adds capture so a
+           phone opens the camera rather than the gallery -->
+      <input type="file" id="coverInput" accept="image/*" hidden>
 
       <!-- name + author -->
       <div class="form-fields">

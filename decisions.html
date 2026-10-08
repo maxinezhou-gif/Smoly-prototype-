@@ -93,6 +93,7 @@
     text-transform: uppercase;
   }
   .tag--ours   { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+  .tag--done   { background: var(--md-sys-color-tertiary-container);  color: var(--md-sys-color-on-tertiary-container); }
   .tag--figma  { background: var(--md-sys-color-orange-container);    color: var(--md-sys-color-on-orange-container); }
   .tag--rule   { background: var(--md-sys-color-tertiary-container);  color: var(--md-sys-color-on-tertiary-container); }
   .tag--open   { background: var(--md-sys-color-yellow-container);    color: var(--md-sys-color-on-yellow-container); }
@@ -177,12 +178,39 @@
   </div>
 
   <div class="entry">
-    <span class="tag tag--ours">Decided here</span>
+    <span class="tag tag--done">Confirmed</span>
     <p class="entry__title">The count is unlinked recordings, not all recordings</p>
     <p class="entry__body">
       A recording that already has a sticker is finished, so counting it in “Link <em>n</em>
-      stickers” would overstate the work left. Worth confirming — the brief said “recorded”,
-      which would include them.
+      stickers” would overstate the work left. Confirmed by design: already-linked recordings
+      are not counted.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--done">Confirmed</span>
+    <p class="entry__title">The timer counts up to the cap, not down from it</p>
+    <p class="entry__body">
+      <code>20:00</code> is the ceiling for a single recording, and the timer runs up towards
+      it — <code>mm:ss / 20:00</code>. The cap itself is a placeholder until the dev team
+      confirms the real storage limit; see <em>Open — for the dev team</em> below.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--ours">Decided here</span>
+    <p class="entry__title">Changing the cover opens a menu, not the OS picker</p>
+    <p class="entry__body">
+      <em>Change photo</em> raises a menu with <strong>Photo library</strong>,
+      <strong>Take a photo</strong> and <strong>Choose file</strong>. iOS offers those same
+      three from one native sheet, so the design is drawing explicitly what the OS would
+      otherwise decide — worth knowing, because a production build gets the native sheet free
+      from a single file input and would have to opt out of it to match this.
+    </p>
+    <p class="entry__body">
+      All three land on the same picker. <em>Take a photo</em> adds <code>capture</code> so a
+      phone opens the camera rather than the gallery. Picking an image swaps the cover for
+      real, so the prototype demos with the right book.
     </p>
   </div>
 
@@ -348,16 +376,43 @@
     </p>
   </div>
 
-  <h2>Still open</h2>
+  <h2>Open — for the dev team</h2>
+  <p class="section__note">
+    Design questions are answered. These need an engineering answer before the behaviour can
+    be finalised.
+  </p>
 
   <div class="entry">
-    <span class="tag tag--open">Open</span>
-    <p class="entry__title">Questions worth an answer before build</p>
+    <span class="tag tag--open">Needs an answer</span>
+    <p class="entry__title">What is the storage cap for one audio tile?</p>
     <p class="entry__body">
-      Does “Link <em>n</em> stickers” count already-linked recordings? Should the timer count up
-      to 20:00 or down from it? What happens after <em>Link to a sticker</em> — there is no
-      frame for the destination. And should the cover art be swappable per book, or is the
-      photo picker the only route in?
+      The <code>20:00</code> ceiling in the prototype is a placeholder, not a decision. What is
+      the real limit for a single recording — and is it bounded by device storage, by what the
+      wand can hold, or by an upload size?
+    </p>
+    <p class="entry__body">
+      <strong>Current behaviour:</strong> recording stops silently on reaching
+      <code>20:00</code>. That is a placeholder too — silently stopping mid-sentence is not
+      something anyone chose.
+    </p>
+    <p class="entry__body">
+      <strong>Once confirmed,</strong> one of two things happens: the cap is lifted entirely if
+      there is no meaningful limit, or it stays and gains a toast when the user reaches it, so
+      the stop is explained rather than just happening. Both are small changes —
+      <code>MAX_SECONDS</code> at the top of <code>app.js</code> plus a few lines in
+      <code>stopRecording</code>.
+    </p>
+  </div>
+
+  <h2>Being designed elsewhere</h2>
+
+  <div class="entry">
+    <span class="tag tag--open">Separate flow</span>
+    <p class="entry__title">Link to a sticker</p>
+    <p class="entry__body">
+      Its own flow, in design now, to be built into this prototype afterwards. Both entry
+      points exist and are wired — the button inside the sheet and the bulk action under the
+      list — and currently raise a toast instead of navigating.
     </p>
   </div>
 
