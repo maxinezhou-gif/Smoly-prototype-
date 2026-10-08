@@ -38,6 +38,29 @@ tap Share → Add to Home Screen, then launch from the icon — `manifest.webman
 toolbar. The index shows a one-line reminder on phone-width screens, and hides it once
 you are running standalone. Android/Chrome offers the same thing as Install app.
 
+### How the shell is sized
+
+The frame is a 390×844 artboard on desktop only. In full-screen mode it is driven by the
+viewport instead, and three rules keep it from bleeding on a device taller than 844:
+
+- **The document never scrolls.** `html, body` are pinned to `100dvh` with
+  `overflow: hidden`. `100vh` on iOS is the *toolbar-hidden* height, so a body sized to it
+  is taller than what you can actually see — the page then scrolls behind the shell and
+  the backdrop shows at the edges. `dvh` tracks the toolbar; `vh` is kept as a fallback
+  line for older Safari.
+- **`.screen` is the only scroller, and its bounce stays put.**
+  `overscroll-behavior: contain` stops a rubber-band at either end chaining out to the
+  document and flashing the backdrop.
+- **Scroll travel comes from the screen height, not a fixed number.**
+  `.contents-frame` is `min-height: calc(100% + 24px)` against `.screen`, so travel always
+  works out as *(height of whatever bars are showing) + 24* — enough to bury them on any
+  device, with nothing left over. It was a hard-coded 1153 (Figma's frame height), which
+  left ~565px of dead cream on a 932-tall phone and would have been too little on a
+  shorter one.
+
+Measured: 375×667 travel 130 vs 64 of bars; 430×932 travel 88 vs 64; 390 desktop with the
+drawn status bar travel 150 vs 126. Both bars fully buried at maximum scroll in each case.
+
 Below 440px the fixed Figma widths become fluid (`max-width` rather than `width`) so the
 layout does not overflow on a 375px phone — an SE or a mini. At 390 and above every
 measurement is still exactly the Figma value.

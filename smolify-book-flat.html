@@ -90,6 +90,9 @@
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
+    /* the only scroller in the page — keep its rubber-band to itself rather
+       than letting it chain out to the document and flash the backdrop */
+    overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
   }
   .screen::-webkit-scrollbar { width: 0; }
@@ -103,7 +106,16 @@
 
   /* arch + body are one frame — the -1px kills the hairline of device
      background that otherwise shows through the seam */
-  .contents-frame { position: relative; z-index: 1; }
+  /* One screen tall plus a little, so there is always just enough travel to
+     lift the frame clear of the bars — on any device height. The old fixed
+     height was Figma's 1153 and left ~565px of dead cream on a tall phone. */
+  .contents-frame {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100% + 24px);
+  }
   .curve { display: block; width: 100%; height: 22px; }
   .contents {
     margin-top: -1px;
@@ -112,9 +124,7 @@
        on the first child collapses out of .contents and drags the whole frame
        down, opening a gap under the arch that shows the device background */
     padding: 4px 15px 24px;
-    /* Figma's contents frame is 1175 tall (22 curve + 1153), which is what
-       gives the frame enough travel to scroll clear of the app bar */
-    min-height: 1153px;
+    flex: 1;
   }
 
   /* cover */
@@ -236,7 +246,18 @@
      100dvh rather than 100vh so Safari's collapsing toolbar does not
      leave the nav bar hanging below the fold. */
   @media (max-width: 440px), (display-mode: standalone) {
-    body { padding: 0; background: var(--md-sys-color-secondary-container); }
+    /* Pin the document to the *visual* viewport and stop it scrolling at all.
+       100vh on iOS is the toolbar-hidden height, so a body sized to it is
+       taller than what you can actually see — the page then scrolls behind
+       the shell and the backdrop bleeds in at the edges. dvh tracks the
+       toolbar; overflow hidden means only .screen ever moves. */
+    html, body {
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+    body { min-height: 0; padding: 0; background: var(--md-sys-color-secondary-container); }
 
     .device {
       width: 100%;
