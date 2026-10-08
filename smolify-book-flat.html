@@ -127,6 +127,17 @@
     flex: 1;
   }
 
+  /* Trailing room below the content so the last control is never jammed against
+     the nav bar and there is always somewhere left to scroll — without it the
+     frame ends 24px under the bulk buttons and centring a new tile has nowhere
+     to go. 30% of .screen rather than a vh unit or a fixed number: the scroller
+     has a definite height in both modes, so this is 30% of the 844 artboard on
+     desktop and 30% of the real viewport full screen, with no second rule. */
+  .screen-tail {
+    height: 30%;
+    background: var(--md-sys-color-surface);
+  }
+
   /* cover */
   .cover {
     position: relative;
@@ -401,6 +412,7 @@
 
     </div>
     </div>
+    <div class="screen-tail" aria-hidden="true"></div>
   </main>
 
   <!-- navigation bar -->

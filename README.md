@@ -58,8 +58,18 @@ viewport instead, and three rules keep it from bleeding on a device taller than 
   left ~565px of dead cream on a 932-tall phone and would have been too little on a
   shorter one.
 
+- **A trailing 30% keeps the last control off the nav bar.** `.screen-tail` is
+  `height: 30%` of `.screen`, so at maximum scroll there is always about a third of a
+  screen of cream between the bulk buttons and the nav bar. Without it the frame ended
+  24px under those buttons: nothing left to scroll, and centring a newly added tile had
+  nowhere to go. A percentage rather than a `vh` unit or a fixed number — the scroller has
+  a definite height in both modes, so one rule gives 30% of the 844 artboard on desktop
+  and 30% of the real viewport full screen.
+
 Measured: 375×667 travel 130 vs 64 of bars; 430×932 travel 88 vs 64; 390 desktop with the
 drawn status bar travel 150 vs 126. Both bars fully buried at maximum scroll in each case.
+With the tail and two tiles: 764-tall scroller, 229 tail, 253 between the secondary button
+and the nav bar, in both desktop and full-screen modes.
 
 Below 440px the fixed Figma widths become fluid (`max-width` rather than `width`) so the
 layout does not overflow on a 375px phone — an SE or a mini. At 390 and above every
