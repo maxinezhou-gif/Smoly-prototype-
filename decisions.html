@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smoly — Design decisions</title>
+<meta name="theme-color" content="#f2ede5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Mulish:wght@400;600&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--md-sys-color-surface-container);
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--md-ref-typeface-plain), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .doc { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+
+  .doc__back {
+    display: inline-block;
+    margin-bottom: var(--smoly-space-40);
+    color: var(--md-sys-color-on-surface-variant);
+    font: 600 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif;
+    text-decoration: none;
+  }
+  .doc__back:hover { color: var(--md-sys-color-on-surface); }
+
+  h1 {
+    margin: 0 0 var(--smoly-space-12);
+    font: 400 36px/44px var(--md-ref-typeface-brand), var(--md-ref-typeface-plain), sans-serif;
+  }
+  .doc__intro {
+    margin: 0 0 var(--smoly-space-40);
+    max-width: 62ch;
+    color: var(--md-sys-color-on-surface-variant);
+    font: 400 16px/24px var(--md-ref-typeface-plain), system-ui, sans-serif;
+    letter-spacing: .5px;
+  }
+
+  h2 {
+    margin: var(--smoly-space-40) 0 var(--smoly-space-8);
+    font: 400 22px/28px var(--md-ref-typeface-brand), var(--md-ref-typeface-plain), sans-serif;
+  }
+  .section__note {
+    margin: 0 0 var(--smoly-space-16);
+    max-width: 62ch;
+    color: var(--md-sys-color-on-surface-variant);
+    font: 400 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif;
+    letter-spacing: .25px;
+  }
+
+  .entry {
+    padding: var(--smoly-space-16);
+    margin-bottom: var(--smoly-space-8);
+    background: var(--md-sys-color-surface);
+    border-radius: var(--md-sys-shape-corner-medium);
+    box-shadow: inset 0 0 0 1px var(--md-sys-color-outline-variant);
+  }
+  .entry__title {
+    margin: 0 0 var(--smoly-space-4);
+    font: 600 16px/24px var(--md-ref-typeface-plain), system-ui, sans-serif;
+    letter-spacing: .15px;
+  }
+  .entry__body {
+    margin: 0;
+    max-width: 68ch;
+    color: var(--md-sys-color-on-surface-variant);
+    font: 400 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif;
+    letter-spacing: .25px;
+  }
+  .entry__body + .entry__body { margin-top: var(--smoly-space-8); }
+  .entry code {
+    padding: 1px 5px;
+    background: var(--md-sys-color-surface-container-high);
+    border-radius: var(--md-sys-shape-corner-extra-small);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    margin-bottom: var(--smoly-space-8);
+    padding-inline: var(--smoly-space-8);
+    border-radius: var(--md-sys-shape-corner-small);
+    font: 600 11px/16px var(--md-ref-typeface-plain), system-ui, sans-serif;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+  }
+  .tag--ours   { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+  .tag--figma  { background: var(--md-sys-color-orange-container);    color: var(--md-sys-color-on-orange-container); }
+  .tag--rule   { background: var(--md-sys-color-tertiary-container);  color: var(--md-sys-color-on-tertiary-container); }
+  .tag--open   { background: var(--md-sys-color-yellow-container);    color: var(--md-sys-color-on-yellow-container); }
+
+  table { width: 100%; border-collapse: collapse; margin-top: var(--smoly-space-8); }
+  th, td {
+    padding: 6px 12px 6px 0;
+    text-align: left;
+    font: 400 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif;
+    letter-spacing: .25px;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  }
+  th { font-weight: 600; color: var(--md-sys-color-on-surface); }
+  td { color: var(--md-sys-color-on-surface-variant); }
+
+  .doc__foot {
+    margin-top: var(--smoly-space-40);
+    padding-top: var(--smoly-space-16);
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    color: var(--md-sys-color-outline);
+    font: 400 13px/18px var(--md-ref-typeface-plain), system-ui, sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<main class="doc">
+
+  <a class="doc__back" href="index.html">← All prototypes</a>
+
+  <h1>Design decisions</h1>
+  <p class="doc__intro">
+    Everything in the Smolify-a-book prototype that is <em>not</em> simply read off
+    <strong>Smoly App Design</strong> §781:26595 and the <strong>Smoly Material Library</strong>.
+    Three kinds of entry: calls made while building, places the Figma file disagrees with
+    itself or with the prototype, and conventions that any production implementation will
+    hit too.
+  </p>
+
+  <h2>Decided while building</h2>
+  <p class="section__note">
+    Not in the Figma file. Treat these as proposals — each one is a line or two to change.
+  </p>
+
+  <div class="entry">
+    <span class="tag tag--ours">Decided here</span>
+    <p class="entry__title">The tile is always seen before the sheet</p>
+    <p class="entry__body">
+      Every entry point adds the tile, lets it dissolve in and centre itself, waits
+      <code>800ms</code>, then opens the sheet. On <em>Record next audio</em> the open sheet
+      slides out first and the delay starts after it has cleared, so the new tile is never
+      introduced behind a panel.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--ours">Decided here</span>
+    <p class="entry__title">A new tile scrolls to the middle, not the bottom</p>
+    <p class="entry__body">
+      It is the thing the user just made, so it should be what they are looking at when the
+      sheet arrives.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--ours">Decided here</span>
+    <p class="entry__title">The bulk pair is always present once a list exists</p>
+    <p class="entry__body">
+      Not gated on how much has been recorded. What changes is the secondary button: it counts
+      the recordings still waiting for a sticker and goes disabled when there are none.
+    </p>
+    <table>
+      <tr><th>Recordings awaiting a sticker</th><th>Secondary button</th><th>State</th></tr>
+      <tr><td>0</td><td>Link sticker</td><td>Disabled</td></tr>
+      <tr><td>1</td><td>Link 1 sticker</td><td>Enabled</td></tr>
+      <tr><td>2+</td><td>Link <em>n</em> stickers</td><td>Enabled</td></tr>
+    </table>
+    <p class="entry__body">
+      The primary stays live in every state — recording is how you get out of an empty list, so
+      disabling it would be a dead end.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--ours">Decided here</span>
+    <p class="entry__title">The count is unlinked recordings, not all recordings</p>
+    <p class="entry__body">
+      A recording that already has a sticker is finished, so counting it in “Link <em>n</em>
+      stickers” would overstate the work left. Worth confirming — the brief said “recorded”,
+      which would include them.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--ours">Decided here</span>
+    <p class="entry__title">One tile expanded at a time</p>
+    <p class="entry__body">
+      Expanding another tile, collapsing, deleting or re-recording all stop playback. Two
+      players running at once is never what anyone wants. Tiles still on <em>No audio</em> do
+      not expand, since there is nothing to play.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--ours">Decided here</span>
+    <p class="entry__title">The status bar is covered, not scrolled away</p>
+    <p class="entry__body">
+      The Figma structure lets it scroll off entirely. Here it sticks at <code>top: 0</code> and
+      the contents frame paints over it, so it is buried on the way down and uncovered on the way
+      back — the bar itself never moves. A toggle on the index decides whether it is drawn at
+      all, defaulting off on a phone, which already has a real one.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--ours">Decided here</span>
+    <p class="entry__title">Additions with no Figma source</p>
+    <p class="entry__body">
+      The scrim behind the sheet, the toast used for out-of-flow actions, and the halo that
+      pulses around the dial while recording. The halo exists in one build only —
+      <code>smolify-book.html</code> has it, <code>smolify-book-flat.html</code> does not.
+    </p>
+  </div>
+
+  <h2>Where the Figma file disagrees</h2>
+  <p class="section__note">
+    Found while building. Each one is a decision someone has to make in the file, not in code.
+  </p>
+
+  <div class="entry">
+    <span class="tag tag--figma">Figma conflict</span>
+    <p class="entry__title">Two timer formats</p>
+    <p class="entry__body">
+      The Front Page sheet reads <code>00:00:27 / 00:20:00</code>; the <em>Recording - #1</em>
+      sheets read <code>00:27 / 20:00</code>. The prototype uses <code>mm:ss / 20:00</code>.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--figma">Figma conflict</span>
+    <p class="entry__title">The Home nav icon</p>
+    <p class="entry__body">
+      The file specifies <code>on-secondary-container</code> <code>#00458f</code> for it, which
+      reads as an active destination while you are in the Create flow. The prototype uses
+      <code>on-surface-variant</code> as directed. File and prototype now differ.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--figma">Figma conflict</span>
+    <p class="entry__title">The bulk-action state has no frame</p>
+    <p class="entry__body">
+      Described but never drawn. Composed from the Medium button at the same 56 / 16 rhythm as
+      the pair inside the sheet.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--figma">Figma conflict</span>
+    <p class="entry__title">Body/Small is no longer used, and the frames grew</p>
+    <p class="entry__body">
+      Every Body/Small usage moved to Body/Medium for legibility on a phone. The 16 → 20
+      line-height moves geometry the frames still show at the old size.
+    </p>
+    <table>
+      <tr><th></th><th>Figma</th><th>Prototype</th></tr>
+      <tr><td>Sheet · start</td><td>270</td><td>274</td></tr>
+      <tr><td>Sheet · recording</td><td>326</td><td>330</td></tr>
+      <tr><td>Sheet · recorded</td><td>486</td><td>490</td></tr>
+      <tr><td>“Play in order” row</td><td>40</td><td>44</td></tr>
+    </table>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--figma">Figma conflict</span>
+    <p class="entry__title"><code>smoly-ui/</code> is a stale system</p>
+    <p class="entry__body">
+      The older library in the project folder mirrors a different set — <code>--sm-*</code>
+      names, green primary <code>#598300</code>. The live one is <code>--md-sys-*</code> with
+      pink <code>#f15a86</code>. Nothing here depends on it, but it will mislead whoever opens
+      it next.
+    </p>
+  </div>
+
+  <h2>Conventions for implementation</h2>
+  <p class="section__note">
+    Each of these was a real bug in this prototype before it was a rule. A production build will
+    meet all of them.
+  </p>
+
+  <div class="entry">
+    <span class="tag tag--rule">Convention</span>
+    <p class="entry__title">A Figma stroke is not a CSS border</p>
+    <p class="entry__body">
+      Figma draws strokes inside the box. On an element whose height comes from its content, a
+      <code>1px</code> border adds 2px — the audio tile measured 54 / 138 where the design says
+      52 / 136. Use an inset ring instead:
+      <code>box-shadow: inset 0 0 0 1px …</code>. Elements with an explicit height are unaffected.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--rule">Convention</span>
+    <p class="entry__title">A sticky offset must track whatever sits above it</p>
+    <p class="entry__body">
+      Sticky pins an element as soon as its natural position is above the threshold. Leaving the
+      app bar at <code>top: 62px</code> with no status bar above it pushed the bar 62px
+      <em>down</em> the page, and the contents frame then covered it.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--rule">Convention</span>
+    <p class="entry__title">Leading space is padding on the parent, not margin on the child</p>
+    <p class="entry__body">
+      A top margin on a first child collapses out of its parent and drags the whole frame down.
+      The 4px above the book cover did exactly that, opening a band of device background under
+      the arch that looked like a rendering seam.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--rule">Convention</span>
+    <p class="entry__title">No <code>font</code> shorthand for component type</p>
+    <p class="entry__body">
+      A CSS-wide keyword is only valid as an entire property value, so
+      <code>font: 600 14px/20px inherit</code> is invalid and the whole declaration is dropped
+      silently — every button label fell back to the browser default of 13.33px/400. The
+      shorthand also resets <code>font-family</code>. Use longhands.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--rule">Convention</span>
+    <p class="entry__title">Entrance animations clean up after themselves</p>
+    <p class="entry__body">
+      Remove the class on <code>animationend</code>, with a timer as backstop. Leaving it on
+      means the element leans on <code>animation-fill-mode</code> forever and parks at its
+      starting keyframe — blurred and at 97% — if the animation never runs, which happens in a
+      backgrounded tab.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--rule">Convention</span>
+    <p class="entry__title">Token exceptions worth knowing</p>
+    <p class="entry__body">
+      Filled buttons take <code>--smoly-color-button-on-filled</code> <code>#ffffff</code>, not
+      <code>on-primary</code>. XSmall and Small buttons use Label/Large; Medium uses
+      Title/Medium. The <em>Add</em> text button’s label is <code>on-primary-container</code>
+      <code>#8f043f</code>, not <code>primary</code> — not a value anyone would guess from a
+      render.
+    </p>
+  </div>
+
+  <h2>Still open</h2>
+
+  <div class="entry">
+    <span class="tag tag--open">Open</span>
+    <p class="entry__title">Questions worth an answer before build</p>
+    <p class="entry__body">
+      Does “Link <em>n</em> stickers” count already-linked recordings? Should the timer count up
+      to 20:00 or down from it? What happens after <em>Link to a sticker</em> — there is no
+      frame for the destination. And should the cover art be swappable per book, or is the
+      photo picker the only route in?
+    </p>
+  </div>
+
+  <p class="doc__foot">
+    Sources: Smoly App Design <code>zp3H9TjCyy9F9ViIescwbx</code> §781:26595 and §831:28243 ·
+    Smoly Material Library <code>7Js3isvjdjVoFWNoPPpWo4</code>. Measurements read from the files,
+    not estimated from renders.
+  </p>
+
+</main>
+
+</body>
+</html>

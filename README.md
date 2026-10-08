@@ -60,6 +60,7 @@ stroke inside it.
 | `assets/` | `curve-top.svg` `sheet-curve.svg` `drag-indicator.svg` `switch-handle.svg` `slider-thumb.svg` `cover.png` |
 | `serve.py` | No-cache dev server, with a `--lan` mode for phone testing |
 | `prefs.js` | Viewing preferences shared by the index and the prototypes |
+| `decisions.html` | Design decisions, Figma conflicts and implementation conventions — the handoff doc |
 | `archive/` | Superseded prototypes, kept so the index is self-contained |
 
 ### The two builds

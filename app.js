@@ -18,7 +18,6 @@
   const SHEET_EXIT       = 320; // must match the .md-sheet transform transition
   const MAX_SECONDS      = 20 * 60;  // the 20:00 ceiling shown in the timer
   const WAVE_FULL_SCALE  = 27;  // seconds of audio that fill the whole waveform
-  const BULK_THRESHOLD   = 2;   // unlinked tiles needed before bulk actions show
 
   /* Waveform geometry, read from the Figma "Sound wave" frame
      (211.969 × 29.411, 36 bars). [left, width, height] */
@@ -267,9 +266,33 @@
     el.emptyNote.hidden = hasTiles;
     el.recordFrontBtn.hidden = hasTiles;
 
-    const showBulk = unlinkedCount() >= BULK_THRESHOLD && state.mode === 'closed';
-    el.bulk.hidden = !showBulk;
-    if (showBulk) el.bulkLink.textContent = `Link ${unlinkedCount()} stickers`;
+    syncBulk(false);
+  }
+
+  /* The pair under the list. Present whenever there is a list to act on and no
+     sheet in the way — not gated on how much has been recorded. What changes
+     is the secondary: it counts the recordings still waiting for a sticker,
+     and goes disabled when there are none, because there is nothing to link.
+     The primary stays live either way; recording is how you get out of an
+     empty list, so disabling it would be a dead end. */
+  function syncBulk(animate) {
+    const n = unlinkedCount();
+    el.bulkLink.textContent = n === 0 ? 'Link sticker'
+                            : n === 1 ? 'Link 1 sticker'
+                            : `Link ${n} stickers`;
+    el.bulkLink.disabled = n === 0;
+
+    const show = state.tiles.length > 0 && state.mode === 'closed';
+    if (!show) { el.bulk.hidden = true; return; }
+
+    const wasHidden = el.bulk.hidden;
+    el.bulk.hidden = false;
+    if (animate && wasHidden) {
+      el.bulk.classList.remove('is-entering');
+      void el.bulk.offsetWidth;          // restart the animation
+      el.bulk.classList.add('is-entering');
+      settleEntrance(el.bulk);
+    }
   }
 
   function addTile() {
@@ -313,6 +336,7 @@
     node.className = `sm-chip ${chip.cls}`;
     node.innerHTML = `<span class="ms">${chip.icon}</span>${chip.label}`;
     syncTile(tile, row);   // gaining or losing audio changes whether it expands
+    syncBulk(false);       // ...and changes how many are waiting for a sticker
   }
 
   /* ── sheet ────────────────────────────────────────────── */
@@ -370,15 +394,7 @@
     hideSheet();
 
     // a tile that was opened but never recorded keeps its "No audio" chip
-    const showBulk = unlinkedCount() >= BULK_THRESHOLD;
-    if (showBulk) {
-      el.bulkLink.textContent = `Link ${unlinkedCount()} stickers`;
-      el.bulk.hidden = false;
-      el.bulk.classList.remove('is-entering');
-      void el.bulk.offsetWidth;          // restart the animation
-      el.bulk.classList.add('is-entering');
-      settleEntrance(el.bulk);
-    }
+    syncBulk(true);
   }
 
   function stopTicker() { clearInterval(ticker); ticker = null; }
