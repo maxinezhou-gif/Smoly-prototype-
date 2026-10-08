@@ -314,4 +314,5 @@ One line in `index.html`:
 <a class="index__item" href="your-prototype.html">Your prototype</a>
 ```
 
-Archived entries use `class="index__item index__item--archived"`.
+The `<hr class="index__divider">` separates the prototypes from the handoff material
+below; put new prototypes above it.
