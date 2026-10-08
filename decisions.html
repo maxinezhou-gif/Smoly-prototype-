@@ -355,6 +355,24 @@
 
   <div class="entry">
     <span class="tag tag--rule">Convention</span>
+    <p class="entry__title">Never take height out of a scroller at the moment of a tap</p>
+    <p class="entry__body">
+      Adding a tile used to hide the bulk buttons first, pulling 128px out of the layout
+      underneath the finger that had just tapped. The scroller collapsed from 1230 to 1142,
+      the browser clamped the scroll position, and the smooth scroll to the new tile then
+      fought that clamp — which is what the lurch was. It only showed on <em>Add</em>, because
+      that is the only entry point reachable while the buttons are on screen.
+    </p>
+    <p class="entry__body">
+      The block now stays laid out whenever there is a list, including while the sheet is up.
+      The sheet is modal and covers the bottom of the frame, so hiding it bought nothing and
+      cost a collapse every time one opened. Growing a scroller is fine; shrinking one under
+      a live gesture is not.
+    </p>
+  </div>
+
+  <div class="entry">
+    <span class="tag tag--rule">Convention</span>
     <p class="entry__title">Entrance animations clean up after themselves</p>
     <p class="entry__body">
       Remove the class on <code>animationend</code>, with a timer as backstop. Leaving it on

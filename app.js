@@ -283,8 +283,10 @@
                             : `Link ${n} stickers`;
     el.bulkLink.disabled = n === 0;
 
-    const show = state.tiles.length > 0 && state.mode === 'closed';
-    if (!show) { el.bulk.hidden = true; return; }
+    /* Visibility follows the list alone, not the sheet. The sheet is modal and
+       covers the bottom of the frame anyway, so hiding the block while it is up
+       buys nothing and costs a layout collapse every time one opens. */
+    if (state.tiles.length === 0) { el.bulk.hidden = true; return; }
 
     const wasHidden = el.bulk.hidden;
     el.bulk.hidden = false;
@@ -314,11 +316,14 @@
     // so existing tiles do not flash
     el.emptyNote.hidden = true;
     el.recordFrontBtn.hidden = true;
-    el.bulk.hidden = true;
     el.list.hidden = false;
+    // deliberately NOT hiding the bulk block: pulling 128px out of the layout
+    // at the moment of the tap collapses the scroller under the user's finger
+    // and the smooth scroll below then fights the clamp
     const row = renderTile(tile, true);
     el.list.appendChild(row);
     settleEntrance(row);
+    syncBulk(true);   // before the scroll, so the geometry it centres against is final
     // settle the new tile in the middle of the screen rather than jumping to
     // the bottom — it is the thing the user just created, so it should be
     // what they are looking at when the sheet arrives
@@ -379,7 +384,7 @@
     setMode('start');
     el.scrim.classList.add('is-open');
     el.sheet.classList.add('is-open');
-    el.bulk.hidden = true;
+    syncBulk(false);   // stays laid out behind the scrim; never collapses
   }
 
   /* slide the sheet away without drawing any conclusions about the list */
