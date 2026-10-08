@@ -35,13 +35,20 @@
 }
 .md-btn:disabled { opacity: .38; cursor: default; }
 
-/* sizes — height / padding / gap / label style straight from the library */
+/* Sizes — height / padding / gap / label style straight from the library.
+   Longhands, not the `font` shorthand: the shorthand needs a family, so
+   `font: 600 14px/20px inherit` is invalid and silently drops the whole
+   declaration — and a shorthand that did parse would reset font-family
+   and wipe the Mulish set on .md-btn above. */
+
+/* XSmall 32 / Small 40 — Label/Large */
 .md-btn--xs { height: 32px; padding-inline: var(--smoly-space-12); gap: var(--smoly-space-4);
-              font: 600 14px/20px inherit; letter-spacing: .1px; }
+              font-size: 14px; line-height: 20px; font-weight: 600; letter-spacing: .1px; }
 .md-btn--sm { height: 40px; padding-inline: var(--smoly-space-16); gap: var(--smoly-space-8);
-              font: 600 14px/20px inherit; letter-spacing: .1px; }
+              font-size: 14px; line-height: 20px; font-weight: 600; letter-spacing: .1px; }
+/* Medium 56 — Title/Medium (library node 20:147) */
 .md-btn--md { height: 56px; padding-inline: var(--smoly-space-24); gap: var(--smoly-space-8);
-              font: 600 16px/24px inherit; letter-spacing: .15px; }
+              font-size: 16px; line-height: 24px; font-weight: 600; letter-spacing: .15px; }
 .md-btn--xs .ms, .md-btn--sm .ms { font-size: 20px; }
 .md-btn--md .ms { font-size: 24px; }
 
