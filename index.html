@@ -15,6 +15,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600&display=swap">
 <link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<script src="prefs.js"></script>
 <style>
   html, body { margin: 0; padding: 0; }
   body {
@@ -78,6 +80,17 @@
     .index__item:active { transform: none; }
   }
 
+  /* viewing options */
+  .index__setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--smoly-space-16);
+    padding-inline: var(--smoly-space-24);
+  }
+  .index__setting-text { color: var(--md-sys-color-on-surface); font: 400 15px/20px var(--md-ref-typeface-plain), system-ui, sans-serif; }
+  .index__setting-note { margin-top: 2px; color: var(--md-sys-color-outline); font: 400 13px/18px var(--md-ref-typeface-plain), system-ui, sans-serif; }
+
   /* Only worth saying on a phone, and pointless once they have done it */
   .index__tip { display: none; }
   @media (max-width: 440px) {
@@ -111,9 +124,42 @@
     <a class="index__item index__item--archived" href="archive/new-book-prototype/index.html">New book prototype</a>
   </div>
 
+  <p class="index__label">Viewing</p>
+
+  <div class="index__setting">
+    <span>
+      <span class="index__setting-text">iOS status bar</span>
+      <span class="index__setting-note" id="statusBarNote"></span>
+    </span>
+    <button class="md-switch" id="statusBarToggle" role="switch" aria-checked="true"
+            aria-label="Draw the iOS status bar inside the prototype">
+      <img class="md-switch__handle" src="assets/switch-handle.svg" alt="" width="24" height="24">
+    </button>
+  </div>
+
   <p class="index__tip">Share → Add to Home Screen to run these without the browser bar.</p>
 
 </main>
+
+<script>
+  (function () {
+    var toggle = document.getElementById('statusBarToggle');
+    var note = document.getElementById('statusBarNote');
+
+    function sync() {
+      var on = SmolyPrefs.statusBar();
+      toggle.setAttribute('aria-checked', String(on));
+      note.textContent = on ? 'Drawn inside the frame' : 'Using your device’s own';
+    }
+
+    toggle.addEventListener('click', function () {
+      SmolyPrefs.setStatusBar(!SmolyPrefs.statusBar());
+      sync();
+    });
+
+    sync();
+  })();
+</script>
 
 </body>
 </html>

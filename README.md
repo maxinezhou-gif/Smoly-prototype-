@@ -59,6 +59,7 @@ stroke inside it.
 | `app.js` | The flow state machine, waveform and overflow menu — shared by both builds |
 | `assets/` | `curve-top.svg` `sheet-curve.svg` `drag-indicator.svg` `switch-handle.svg` `slider-thumb.svg` `cover.png` |
 | `serve.py` | No-cache dev server, with a `--lan` mode for phone testing |
+| `prefs.js` | Viewing preferences shared by the index and the prototypes |
 | `archive/` | Superseded prototypes, kept so the index is self-contained |
 
 ### The two builds
@@ -208,6 +209,31 @@ Top of `app.js`:
 | `MAX_SECONDS` | `1200` | The 20:00 ceiling in the timer |
 | `WAVE_FULL_SCALE` | `27` | Seconds of audio that fill the waveform |
 | `BULK_THRESHOLD` | `2` | Unlinked tiles before the bulk actions appear |
+
+## The status bar toggle
+
+The index has a **Viewing → iOS status bar** switch. On it draws the status bar inside
+the device frame; off it leaves the job to whatever the real device shows.
+
+The default is picked per device rather than being a fixed value: off on a phone-sized
+window or when launched from the home screen, on anywhere else. Flip it and the choice
+sticks in `localStorage`, which is per-device, so your desktop and your phone each keep
+their own answer without knowing about each other.
+
+The preference beats the viewport rule in both directions — status bar on a phone, or off
+on a desktop for a clean screenshot. `prefs.js` loads in `<head>` and sets
+`data-statusbar` on `<html>` before first paint, so there is no flash of the wrong state.
+
+Two things to keep in step when touching this:
+
+- **The app bar's sticky offset follows the status bar** (`top: 62` with, `top: 0`
+  without). Sticky pins an element as soon as its natural position is above the
+  threshold, so leaving the offset at 62 with nothing above it shoves the app bar 62px
+  *down* the page and the contents frame then covers it.
+- **Whichever bar is topmost carries `env(safe-area-inset-top)`** on a phone, or the
+  content runs under the notch.
+
+The archived prototype has its own markup and ignores the toggle.
 
 ## Before publishing this anywhere public
 

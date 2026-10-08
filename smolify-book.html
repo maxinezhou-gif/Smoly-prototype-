@@ -18,6 +18,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Mulish:wght@400;600&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0&display=swap">
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="components.css">
+<!-- sets data-statusbar on <html> before first paint -->
+<script src="prefs.js"></script>
 <style>
   html, body { margin: 0; padding: 0; }
   body {
@@ -256,6 +258,36 @@
     .device > .md-navbar {
       height: calc(80px + env(safe-area-inset-bottom));
       padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+
+  /* An explicit choice from the index overrides the viewport rule above, in
+     either direction — status bar on a phone, or off on a desktop for a clean
+     screenshot. More specific than the rules it replaces, so it wins without
+     !important. Whichever bar is topmost carries the safe-area inset. */
+  :root[data-statusbar="off"] .statusbar { display: none; }
+  :root[data-statusbar="on"]  .statusbar { display: flex; }
+  /* The app bar's sticky offset has to follow the status bar. Sticky pins as
+     soon as the natural position is above the threshold, so leaving top at 62
+     with no status bar above it shoves the bar 62px down and the contents
+     frame then covers it. */
+  :root[data-statusbar="off"] .screen .md-appbar { top: 0; }
+  :root[data-statusbar="on"]  .screen .md-appbar { top: 62px; }
+
+  @media (max-width: 440px), (display-mode: standalone) {
+    :root[data-statusbar="on"] .statusbar {
+      height: calc(62px + env(safe-area-inset-top));
+      padding-top: env(safe-area-inset-top);
+    }
+    :root[data-statusbar="on"] .screen .md-appbar {
+      top: calc(62px + env(safe-area-inset-top));
+      height: 64px;
+      padding-top: 0;
+    }
+    :root[data-statusbar="off"] .screen .md-appbar {
+      top: 0;
+      height: calc(64px + env(safe-area-inset-top));
+      padding-top: env(safe-area-inset-top);
     }
   }
 </style>
