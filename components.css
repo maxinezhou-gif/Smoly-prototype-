@@ -263,7 +263,7 @@
 .sm-chip--linked .ms { color: var(--md-sys-color-tertiary); }
 
 /* ── Audio tile ───────────────────────────────────────────── */
-.sm-tile { display: flex; align-items: center; gap: var(--smoly-space-4); width: 358px; }
+.sm-tile { display: flex; align-items: center; gap: var(--smoly-space-4); width: 100%; max-width: 358px; }
 .sm-tile__handle {
   display: flex;
   align-items: center;

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Smoly prototype">
+  <rect width="512" height="512" fill="#fcdee7"/>
+  <g fill="#f15a86">
+    <!-- mic capsule -->
+    <rect x="216" y="128" width="80" height="150" rx="40"/>
+    <!-- pickup arc -->
+    <path d="M160 262 a96 96 0 0 0 192 0" fill="none" stroke="#f15a86" stroke-width="26" stroke-linecap="round"/>
+    <rect x="240" y="352" width="32" height="54" rx="16"/>
+  </g>
+</svg>

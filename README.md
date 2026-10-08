@@ -24,6 +24,29 @@ origin.
 
 This folder is self-contained: it can be copied, zipped or published anywhere as-is.
 
+## Reviewing full screen
+
+On a desktop window the prototype sits in a 390×844 device frame, which is what you want
+for checking it against Figma. On a phone that frame is just in the way, so below 440px —
+and whenever the page is launched from the home screen — it is dropped: the layout fills
+the viewport, the drawn status bar gives way to the real one, and the app bar and nav bar
+grow by the safe-area insets so nothing sits under the notch or the home indicator.
+
+**Losing the browser bar as well** takes Add to Home Screen. Open the index on the phone,
+tap Share → Add to Home Screen, then launch from the icon — `manifest.webmanifest` and the
+`apple-mobile-web-app-capable` tags make it open standalone, with no address bar and no
+toolbar. The index shows a one-line reminder on phone-width screens, and hides it once
+you are running standalone. Android/Chrome offers the same thing as Install app.
+
+Below 440px the fixed Figma widths become fluid (`max-width` rather than `width`) so the
+layout does not overflow on a 375px phone — an SE or a mini. At 390 and above every
+measurement is still exactly the Figma value.
+
+The device frame is an `outline` with a negative offset rather than a `border`, for the
+same reason the audio tile uses an inset ring: a 1px border would take 2px out of the
+inner width and leave the content area at 388 where Figma's frame is a true 390 with the
+stroke inside it.
+
 ## Files
 
 | File | What it holds |

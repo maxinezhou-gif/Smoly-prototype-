@@ -1,0 +1,14 @@
+{
+  "name": "Smoly — Smolify a book",
+  "short_name": "Smoly",
+  "description": "Interactive prototype of the Smolify a book flow",
+  "start_url": "smolify-book.html",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e1ebfa",
+  "theme_color": "#e1ebfa",
+  "icons": [
+    { "src": "assets/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

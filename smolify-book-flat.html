@@ -2,8 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Smoly — Smolify a book (no dial halo)</title>
+<!-- Add to Home Screen opens this without Safari's chrome, which is the only
+     way to lose the address bar on iOS -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Smoly">
+<meta name="theme-color" content="#e1ebfa">
+<link rel="apple-touch-icon" href="assets/app-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Mulish:wght@400;600&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0&display=swap">
@@ -32,7 +41,11 @@
     flex-direction: column;
     overflow: hidden;
     background: var(--md-sys-color-secondary-container);
-    border: 1px solid var(--md-sys-color-outline);
+    /* an outline, not a border: a border would take 2px out of the inner
+       width and leave the content area at 388 where Figma's frame is a
+       true 390 with the stroke inside it */
+    outline: 1px solid var(--md-sys-color-outline);
+    outline-offset: -1px;
     border-radius: var(--md-sys-shape-corner-extra-large);
   }
 
@@ -89,7 +102,7 @@
   /* arch + body are one frame — the -1px kills the hairline of device
      background that otherwise shows through the seam */
   .contents-frame { position: relative; z-index: 1; }
-  .curve { display: block; width: 390px; height: 22px; }
+  .curve { display: block; width: 100%; height: 22px; }
   .contents {
     margin-top: -1px;
     background: var(--md-sys-color-surface);
@@ -105,13 +118,13 @@
   /* cover */
   .cover {
     position: relative;
-    width: 360px;
+    width: 100%;
     height: 204px;
     border-radius: var(--md-sys-shape-corner-medium);
     overflow: hidden;
   }
   /* Figma layers the cover art 367 wide at x=-3 inside the 360 frame */
-  .cover img { width: 367px; height: 204px; margin-left: -3px; object-fit: cover; display: block; }
+  .cover img { width: calc(100% + 7px); height: 204px; margin-left: -3px; object-fit: cover; display: block; }
   .cover .md-btn { position: absolute; left: 117px; top: 93px; }
 
   /* form */
@@ -135,14 +148,15 @@
     align-items: center;
     justify-content: space-between;
     width: 358px;
+    max-width: 100%;
     height: 48px;
   }
   .rec__title { color: var(--md-sys-color-on-surface); font: 400 22px/28px var(--md-ref-typeface-brand), var(--md-ref-typeface-plain), system-ui, sans-serif; }
   .rec__empty { color: var(--md-sys-color-on-surface-variant); font: 400 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .25px; }
   /* the list frame carries 12px of its own vertical padding in Figma,
      so the header-to-first-tile gap reads as 24px */
-  .rec__list { display: flex; flex-direction: column; gap: var(--smoly-space-8); width: 358px; padding-block: var(--smoly-space-12); }
-  .rec__bulk { display: flex; flex-direction: column; gap: var(--smoly-space-16); width: 358px; margin-top: var(--smoly-space-8); }
+  .rec__list { display: flex; flex-direction: column; gap: var(--smoly-space-8); width: 358px; max-width: 100%; padding-block: var(--smoly-space-12); }
+  .rec__bulk { display: flex; flex-direction: column; gap: var(--smoly-space-16); width: 358px; max-width: 100%; margin-top: var(--smoly-space-8); }
 
   /* a tile entering the list — the "dissolve" */
   @keyframes tile-dissolve-in {
@@ -209,6 +223,39 @@
   }
   .back-link:hover { color: var(--md-sys-color-on-surface); }
   .back-link .ms { font-size: 18px; }
+
+  /* ── Full-screen review ───────────────────────────────────────
+     On a phone-sized window, or when launched from the home screen,
+     drop the device shell and fill the viewport. The drawn status bar
+     gives way to the real one, and the two bars grow by the safe-area
+     insets so nothing sits under the notch or the home indicator.
+     100dvh rather than 100vh so Safari's collapsing toolbar does not
+     leave the nav bar hanging below the fold. */
+  @media (max-width: 440px), (display-mode: standalone) {
+    body { padding: 0; background: var(--md-sys-color-secondary-container); }
+
+    .device {
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      outline: 0;
+      border-radius: 0;
+    }
+
+    .back-link { display: none; }
+    .statusbar { display: none; }   /* the device has a real one */
+
+    .screen .md-appbar {
+      top: 0;
+      height: calc(64px + env(safe-area-inset-top));
+      padding-top: env(safe-area-inset-top);
+    }
+
+    .device > .md-navbar {
+      height: calc(80px + env(safe-area-inset-bottom));
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
 </style>
 </head>
 <body data-motion="flat">

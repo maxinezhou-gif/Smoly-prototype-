@@ -2,8 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Smoly — Prototypes</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Smoly">
+<meta name="theme-color" content="#f2ede5">
+<link rel="apple-touch-icon" href="assets/app-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600&display=swap">
@@ -70,6 +77,23 @@
     .index__item { transition: none; }
     .index__item:active { transform: none; }
   }
+
+  /* Only worth saying on a phone, and pointless once they have done it */
+  .index__tip { display: none; }
+  @media (max-width: 440px) {
+    body { padding: 32px 20px; }
+    .index__tip {
+      display: block;
+      margin: var(--smoly-space-40) 0 0;
+      padding-inline: var(--smoly-space-24);
+      color: var(--md-sys-color-outline);
+      font: 400 13px/18px var(--md-ref-typeface-plain), system-ui, sans-serif;
+      text-align: center;
+    }
+  }
+  @media (display-mode: standalone) {
+    .index__tip { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -86,6 +110,8 @@
   <div class="index__list">
     <a class="index__item index__item--archived" href="archive/new-book-prototype/index.html">New book prototype</a>
   </div>
+
+  <p class="index__tip">Share → Add to Home Screen to run these without the browser bar.</p>
 
 </main>
 
