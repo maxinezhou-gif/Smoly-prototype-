@@ -63,8 +63,20 @@
     font: 400 15px/20px var(--md-ref-typeface-plain), system-ui, sans-serif;
   }
 
-  /* secondary entries stay reachable but recede — archived prototypes,
-     and the handoff doc, which is not a prototype at all */
+  /* Divider · Type=Full width — 1px outline-variant (library 10:152).
+     Separates the prototypes from the handoff material below, which is a
+     different kind of thing rather than just another entry in the list. */
+  .index__divider {
+    height: 1px;
+    margin: var(--smoly-space-40) 0 0;
+    border: 0;
+    background: var(--md-sys-color-outline-variant);
+  }
+  /* the label already carries a 40 top margin; after a rule that is too much */
+  .index__divider + .index__label { margin-top: var(--smoly-space-24); }
+
+  /* secondary entries stay reachable but recede — the archived prototypes,
+     which are superseded */
   .index__item--quiet {
     background: none;
     border-color: var(--md-sys-color-outline-variant);
@@ -125,10 +137,12 @@
     <a class="index__item index__item--quiet" href="archive/new-book-prototype/index.html">New book prototype</a>
   </div>
 
+  <hr class="index__divider">
+
   <p class="index__label">Handoff</p>
 
   <div class="index__list">
-    <a class="index__item index__item--quiet" href="decisions.html">Design decisions</a>
+    <a class="index__item" href="decisions.html">Design decisions</a>
   </div>
 
   <p class="index__label">Viewing</p>
