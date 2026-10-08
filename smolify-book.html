@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smoly — Smolify a book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Mulish:wght@400;600&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0&display=swap">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  html, body { margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    background: #eceae4;
+    font-family: var(--md-ref-typeface-plain), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* device shell — the 390×844 frame from Figma */
+  .device {
+    position: relative;
+    flex: none;          /* never let a narrow viewport squeeze the 390 frame */
+    width: 390px;
+    height: 844px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--md-sys-color-secondary-container);
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+  }
+
+  /* Status bar — the top sticky layer inside the scroller. The contents frame
+     paints above it, so scrolling buries it and coming back up uncovers it
+     again; an overscroll drag reveals it progressively on the way. */
+  .statusbar {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 62px;
+    padding: 0 26px 0 32px;
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-surface);
+  }
+  .statusbar__time { font: 600 17px/22px var(--md-ref-typeface-plain), system-ui, sans-serif; }
+  .statusbar__island {
+    position: absolute;
+    left: 50%;
+    top: 12px;
+    width: 125px;
+    height: 36px;
+    margin-left: -62px;
+    background: #000;
+    border-radius: 999px;
+  }
+  .statusbar__glyphs { display: flex; align-items: center; gap: 6px; }
+  .statusbar__glyphs .ms { font-size: 17px; }
+
+  /* Scroll area. The app bar sticks to the top and the contents frame rides
+     over it — later siblings paint above a sticky one, so the curved edge
+     crosses "New book" and eventually covers it entirely. */
+  .screen {
+    position: relative;
+    z-index: 0;          /* keep the contents frame's z-index local to the scroller */
+    flex: 1 0 0;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  .screen::-webkit-scrollbar { width: 0; }
+
+  /* the nav bar and its overhanging FAB sit above everything that scrolls */
+  .device > .md-navbar { position: relative; z-index: 3; }
+
+  /* sticks directly beneath the status bar rather than at 0, so the two stack
+     instead of the app bar sliding over the status bar */
+  .screen .md-appbar { position: sticky; top: 62px; z-index: 0; }
+
+  /* arch + body are one frame — the -1px kills the hairline of device
+     background that otherwise shows through the seam */
+  .contents-frame { position: relative; z-index: 1; }
+  .curve { display: block; width: 390px; height: 22px; }
+  .contents {
+    margin-top: -1px;
+    background: var(--md-sys-color-surface);
+    /* the 4px above the cover is padding, not the cover's margin: a top margin
+       on the first child collapses out of .contents and drags the whole frame
+       down, opening a gap under the arch that shows the device background */
+    padding: 4px 15px 24px;
+    /* Figma's contents frame is 1175 tall (22 curve + 1153), which is what
+       gives the frame enough travel to scroll clear of the app bar */
+    min-height: 1153px;
+  }
+
+  /* cover */
+  .cover {
+    position: relative;
+    width: 360px;
+    height: 204px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    overflow: hidden;
+  }
+  /* Figma layers the cover art 367 wide at x=-3 inside the 360 frame */
+  .cover img { width: 367px; height: 204px; margin-left: -3px; object-fit: cover; display: block; }
+  .cover .md-btn { position: absolute; left: 117px; top: 93px; }
+
+  /* form */
+  .form-fields { display: flex; flex-direction: column; gap: var(--smoly-space-16); margin-top: var(--smoly-space-16); }
+  .seq {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--smoly-space-16);
+    height: 40px;
+    margin-top: var(--smoly-space-16);
+  }
+  .seq__title { color: var(--md-sys-color-on-surface); font: 600 16px/24px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .15px; }
+  .seq__sub   { color: var(--md-sys-color-on-surface-variant); font: 400 12px/16px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .4px; }
+  .seq .md-switch { margin-top: 4px; }
+
+  /* recording block */
+  .rec { margin-top: var(--smoly-space-16); display: flex; flex-direction: column; align-items: center; gap: var(--smoly-space-12); }
+  .rec__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 358px;
+    height: 48px;
+  }
+  .rec__title { color: var(--md-sys-color-on-surface); font: 400 22px/28px var(--md-ref-typeface-brand), var(--md-ref-typeface-plain), system-ui, sans-serif; }
+  .rec__empty { color: var(--md-sys-color-on-surface-variant); font: 400 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .25px; }
+  /* the list frame carries 12px of its own vertical padding in Figma,
+     so the header-to-first-tile gap reads as 24px */
+  .rec__list { display: flex; flex-direction: column; gap: var(--smoly-space-8); width: 358px; padding-block: var(--smoly-space-12); }
+  .rec__bulk { display: flex; flex-direction: column; gap: var(--smoly-space-16); width: 358px; margin-top: var(--smoly-space-8); }
+
+  /* a tile entering the list — the "dissolve" */
+  @keyframes tile-dissolve-in {
+    from { opacity: 0; transform: translateY(-6px) scale(.97); filter: blur(3px); }
+    to   { opacity: 1; transform: none; filter: none; }
+  }
+  .sm-tile.is-entering { animation: tile-dissolve-in .42s cubic-bezier(.2, 0, 0, 1) both; }
+  .rec__bulk.is-entering { animation: tile-dissolve-in .42s cubic-bezier(.2, 0, 0, 1) both; }
+
+  /* waveform */
+  .wave { position: relative; width: 211.969px; height: 29.411px; }
+  .wave__bar { position: absolute; border-radius: var(--md-sys-shape-corner-full); background: var(--md-sys-color-surface-dim); transition: background-color .12s linear; }
+  .wave__bar.is-played { background: var(--md-sys-color-primary); }
+
+  /* Halo around the dial while recording. Scoped to data-motion="pulse" so the
+     flat build can drop it without touching anything else. */
+  @keyframes dial-pulse {
+    0%, 100% { box-shadow: 0 1.2px 4.8px 0 rgba(0, 0, 0, .25), 0 0 0 0 rgba(241, 90, 134, .35); }
+    50%      { box-shadow: 0 1.2px 4.8px 0 rgba(0, 0, 0, .25), 0 0 0 12px rgba(241, 90, 134, 0); }
+  }
+  [data-motion="pulse"] .sm-dial.is-live .sm-dial__ring { animation: dial-pulse 1.6s ease-out infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sm-tile.is-entering, .rec__bulk.is-entering { animation: none; }
+    [data-motion="pulse"] .sm-dial.is-live .sm-dial__ring { animation: none; }
+    .md-sheet, .md-scrim, .sm-tile__player-wrap { transition: none; }
+  }
+
+  /* toast */
+  .toast {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 96px;
+    z-index: 8;
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 14px var(--smoly-space-16);
+    background: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+    border-radius: var(--md-sys-shape-corner-extra-small);
+    box-shadow: var(--elevation-level-2);
+    font: 400 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif;
+    letter-spacing: .25px;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .toast.is-open { opacity: 1; transform: none; }
+
+  /* back to the prototype index */
+  .back-link {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--md-sys-color-on-surface-variant);
+    font: 600 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif;
+    text-decoration: none;
+  }
+  .back-link:hover { color: var(--md-sys-color-on-surface); }
+  .back-link .ms { font-size: 18px; }
+</style>
+</head>
+<body data-motion="pulse">
+
+<a class="back-link" href="index.html"><span class="ms">arrow_back</span>All prototypes</a>
+
+<div class="device" id="device">
+
+  <!-- scrolling content — status bar and app bar both stick, contents ride over both -->
+  <main class="screen" id="screen">
+
+    <!-- status bar -->
+    <div class="statusbar">
+      <span class="statusbar__time">9:41</span>
+      <div class="statusbar__island"></div>
+      <div class="statusbar__glyphs">
+        <span class="ms">signal_cellular_alt</span>
+        <span class="ms">wifi</span>
+        <span class="ms">battery_full</span>
+      </div>
+    </div>
+
+    <header class="md-appbar">
+      <button class="md-iconbtn" aria-label="Back"><span class="ms">arrow_back</span></button>
+      <h1 class="md-appbar__title">New book</h1>
+      <button class="md-iconbtn" aria-label="Account"><span class="ms">person</span></button>
+    </header>
+
+    <div class="contents-frame">
+    <img class="curve" src="assets/curve-top.svg" alt="" width="390" height="22">
+    <div class="contents">
+
+      <!-- cover -->
+      <div class="cover">
+        <img src="assets/cover.png" alt="Book cover">
+        <button class="md-btn md-btn--sm md-btn--tonal">Change photo</button>
+      </div>
+
+      <!-- name + author -->
+      <div class="form-fields">
+        <label class="md-field">
+          <span class="md-field__box">
+            <input class="md-field__input" type="text" placeholder="Book name">
+            <span class="md-field__label">Name</span>
+          </span>
+        </label>
+        <label class="md-field">
+          <span class="md-field__box">
+            <input class="md-field__input" type="text" placeholder="Who's the author of the book">
+            <span class="md-field__label">Author</span>
+          </span>
+        </label>
+      </div>
+
+      <!-- play in order -->
+      <div class="seq">
+        <div>
+          <div class="seq__title">Play in order</div>
+          <div class="seq__sub">Kids can play any page's audio in any order</div>
+        </div>
+        <button class="md-switch" id="seqSwitch" role="switch" aria-checked="true" aria-label="Play in order">
+          <img class="md-switch__handle" src="assets/switch-handle.svg" alt="" width="24" height="24">
+        </button>
+      </div>
+
+      <!-- recording -->
+      <section class="rec">
+        <div class="rec__header">
+          <span class="rec__title">Recording</span>
+          <button class="md-btn md-btn--xs md-btn--text" id="addBtn">Add</button>
+        </div>
+
+        <p class="rec__empty" id="emptyNote">Nothing recorded yet.</p>
+        <button class="md-btn md-btn--sm md-btn--filled" id="recordFrontBtn">
+          <span class="ms">add</span>Record Front Page
+        </button>
+
+        <div class="rec__list" id="recList" hidden></div>
+        <div class="rec__bulk" id="bulkActions" hidden>
+          <button class="md-btn md-btn--md md-btn--filled md-btn--block" id="bulkRecordBtn">Record next audio</button>
+          <button class="md-btn md-btn--md md-btn--tonal md-btn--block" id="bulkLinkBtn">Link 2 stickers</button>
+        </div>
+      </section>
+
+    </div>
+    </div>
+  </main>
+
+  <!-- navigation bar -->
+  <nav class="md-navbar">
+    <button class="md-nav-item" aria-current="page">
+      <span class="md-nav-item__indicator"><span class="ms">home</span></span>
+      <span class="md-nav-item__label">Home</span>
+    </button>
+    <div class="smoly-fab">
+      <div class="smoly-fab__ring">
+        <button class="smoly-fab__inner" id="fabCreate">
+          <span class="ms">mic</span>
+          <span class="smoly-fab__label">Create</span>
+        </button>
+      </div>
+    </div>
+    <button class="md-nav-item">
+      <span class="md-nav-item__indicator"><span class="ms">auto_stories</span></span>
+      <span class="md-nav-item__label">Library</span>
+    </button>
+  </nav>
+
+  <!-- scrim + recording sheet -->
+  <div class="md-scrim" id="scrim"></div>
+
+  <section class="md-sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <img class="md-sheet__cap" src="assets/sheet-curve.svg" alt="" width="390" height="16">
+    <div class="md-sheet__body">
+      <div class="md-sheet__bar">
+        <span class="md-iconbtn" aria-hidden="true"></span>
+        <span class="md-sheet__title" id="sheetTitle">Front Page</span>
+        <button class="md-iconbtn" id="sheetClose" aria-label="Close"><span class="ms">close</span></button>
+      </div>
+
+      <div class="md-sheet__slot">
+        <div class="sheet-visual">
+          <div class="sheet-visual__stage" id="sheetStage" hidden>
+            <div class="wave" id="sheetWave"></div>
+          </div>
+          <span class="sheet-visual__hint" id="sheetHint">Tap to start</span>
+          <span class="sheet-visual__caption" id="sheetTimer" hidden>00:00 / 20:00</span>
+        </div>
+
+        <div class="sheet-transport">
+          <button class="md-iconbtn" id="sheetUndo" aria-label="Record again"><span class="ms">undo</span></button>
+          <button class="sm-dial" id="dial" aria-label="Start recording">
+            <span class="sm-dial__ring">
+              <span class="sm-dial__inner" id="dialInner"><span class="ms" id="dialIcon">mic</span></span>
+            </span>
+          </button>
+          <span class="md-iconbtn" aria-hidden="true"></span>
+        </div>
+
+        <div class="sheet-actions" id="sheetActions" hidden>
+          <button class="md-btn md-btn--md md-btn--filled md-btn--block" id="recordNextBtn">Record next audio</button>
+          <button class="md-btn md-btn--md md-btn--tonal md-btn--block" id="linkStickerBtn">Link to a sticker</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- tile overflow menu -->
+  <div class="md-menu" id="tileMenu" hidden></div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

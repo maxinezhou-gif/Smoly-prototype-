@@ -1,0 +1,124 @@
+/* ============================================================
+   Smoly — design tokens
+   Mirrors the "Smoly Material Library" Figma variable collections
+   (file 7Js3isvjdjVoFWNoPPpWo4 · pages Colour, Typography, Shape & spacing).
+   Values read from Figma, not eyeballed. Do not add tokens here that
+   do not exist in the library.
+   ============================================================ */
+
+:root {
+  /* ── Colour · primary ───────────────────────────────── */
+  --md-sys-color-primary:              #f15a86;
+  --md-sys-color-on-primary:           #3f0017;
+  --md-sys-color-primary-container:    #fcdee7;
+  --md-sys-color-on-primary-container: #8f043f;
+  /* Smoly deviation: filled buttons use white, not on-primary */
+  --smoly-color-button-on-filled:      #ffffff;
+
+  /* ── Colour · secondary (blue) ──────────────────────── */
+  --md-sys-color-secondary:              #4f85dd;
+  --md-sys-color-on-secondary:           #1d1d1b;
+  --md-sys-color-secondary-container:    #e1ebfa;
+  --md-sys-color-on-secondary-container: #00458f;
+
+  /* ── Colour · tertiary (green) ──────────────────────── */
+  --md-sys-color-tertiary:              #80b323;
+  --md-sys-color-on-tertiary:           #1d1d1b;
+  --md-sys-color-tertiary-container:    #f5fce4;
+  --md-sys-color-on-tertiary-container: #344e00;
+
+  /* ── Colour · status extensions ─────────────────────── */
+  --md-sys-color-orange:              #f58521;
+  --md-sys-color-on-orange:           #1d1d1b;
+  --md-sys-color-orange-container:    #fff2e9;
+  --md-sys-color-on-orange-container: #713700;
+  --md-sys-color-yellow:              #e9b41d;
+  --md-sys-color-on-yellow:           #1d1d1b;
+  --md-sys-color-yellow-container:    #ffdf9a;
+  --md-sys-color-on-yellow-container: #5a4300;
+
+  /* ── Colour · error ─────────────────────────────────── */
+  --md-sys-color-error:              #ba1b19;
+  --md-sys-color-on-error:           #ffffff;
+  --md-sys-color-error-container:    #ffdad5;
+  --md-sys-color-on-error-container: #930008;
+
+  /* ── Colour · surfaces + neutrals ───────────────────── */
+  --md-sys-color-surface:                   #fffdf7;
+  --md-sys-color-surface-bright:            #fffdf7;
+  --md-sys-color-surface-dim:               #dddad1;
+  --md-sys-color-surface-variant:           #e9e5de;
+  --md-sys-color-surface-container-lowest:  #ffffff;
+  --md-sys-color-surface-container-low:     #f7f3ea;
+  --md-sys-color-surface-container:         #f2ede5;
+  --md-sys-color-surface-container-high:    #ece8df;
+  --md-sys-color-surface-container-highest: #e9e5de;
+  --md-sys-color-on-surface:                #1d1d1b;
+  --md-sys-color-on-surface-variant:        #48473f;
+  --md-sys-color-outline:                   #79776e;
+  --md-sys-color-outline-variant:           #cac6bc;
+  --md-sys-color-inverse-surface:           #1d1d1b;
+  --md-sys-color-inverse-on-surface:        #f5f0e7;
+  --md-sys-color-scrim:                     #000000;
+  --smoly-color-pressed-surface-container-high: #dddad1;
+  --bg-page:                                #ffffff;
+
+  /* ── Shape ──────────────────────────────────────────── */
+  --md-sys-shape-corner-none:                 0px;
+  --md-sys-shape-corner-extra-small:          4px;
+  --md-sys-shape-corner-small:                8px;
+  --md-sys-shape-corner-medium:               12px;
+  --md-sys-shape-corner-large:                16px;
+  --md-sys-shape-corner-large-increased:      20px;
+  --md-sys-shape-corner-extra-large:          28px;
+  --md-sys-shape-corner-extra-large-increased:32px;
+  --md-sys-shape-corner-extra-extra-large:    48px;
+  --md-sys-shape-corner-full:                 9999px;
+
+  /* ── Spacing ────────────────────────────────────────── */
+  --smoly-space-0:  0px;
+  --smoly-space-4:  4px;
+  --smoly-space-8:  8px;
+  --smoly-space-12: 12px;
+  --smoly-space-16: 16px;
+  --smoly-space-24: 24px;
+  --smoly-space-40: 40px;
+
+  /* ── Typeface ───────────────────────────────────────── */
+  --md-ref-typeface-brand: "Cal Sans";
+  --md-ref-typeface-plain: "Mulish";
+
+  /* ── Elevation ──────────────────────────────────────── */
+  --elevation-level-2: 0 1px 2px 0 rgba(0, 0, 0, .3), 0 2px 6px 2px rgba(0, 0, 0, .15);
+}
+
+/* ── Type scale — the Figma text styles, 1:1 ──────────────
+   Cal Sans carries display + title/large (brand). Everything
+   else is Mulish. SemiBold is the "medium" weight in Figma. */
+
+.md-display-small { font: 400 36px/44px var(--md-ref-typeface-brand), var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: 0; }
+.md-title-large   { font: 400 22px/28px var(--md-ref-typeface-brand), var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: 0; }
+.md-title-medium  { font: 600 16px/24px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .15px; }
+.md-body-large    { font: 400 16px/24px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .5px; }
+.md-body-medium   { font: 400 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .25px; }
+.md-body-small    { font: 400 12px/16px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .4px; }
+.md-label-large   { font: 600 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .1px; }
+.md-label-medium  { font: 600 12px/16px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .5px; }
+.md-label-small   { font: 600 11px/16px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .5px; }
+
+/* Material Symbols Rounded, unfilled — the library's icon default */
+.ms {
+  font-family: "Material Symbols Rounded";
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-variation-settings: "FILL" 0, "GRAD" 0, "opsz" 24;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}

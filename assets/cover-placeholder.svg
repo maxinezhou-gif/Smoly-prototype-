@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="204" viewBox="0 0 360 204" role="img" aria-label="Placeholder book cover">
+  <defs>
+    <clipPath id="frame"><rect width="360" height="204" rx="0"/></clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <!-- sky -->
+    <rect width="360" height="204" fill="#e1ebfa"/>
+
+    <!-- sun -->
+    <circle cx="282" cy="56" r="30" fill="#ffdf9a"/>
+
+    <!-- clouds -->
+    <g fill="#fff2e9">
+      <ellipse cx="74" cy="44" rx="30" ry="14"/>
+      <ellipse cx="96" cy="38" rx="20" ry="12"/>
+      <ellipse cx="196" cy="30" rx="22" ry="10"/>
+    </g>
+
+    <!-- far hill -->
+    <path d="M-20 150 C 60 108, 130 150, 200 128 C 262 108, 320 134, 380 120 L380 204 L-20 204 Z" fill="#f5fce4"/>
+
+    <!-- near hill -->
+    <path d="M-20 176 C 48 146, 118 178, 188 162 C 258 146, 320 174, 380 158 L380 204 L-20 204 Z" fill="#80b323"/>
+
+    <!-- bird -->
+    <g stroke="#f58521" stroke-width="3" stroke-linecap="round" fill="none">
+      <path d="M126 70 q 10 -9 20 0"/>
+      <path d="M146 70 q 10 -9 20 0"/>
+    </g>
+  </g>
+</svg>

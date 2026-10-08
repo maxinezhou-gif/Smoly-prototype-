@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smoly — New book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=Mulish:wght@400;600&family=Roboto:wght@400&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0&display=swap" rel="stylesheet">
+<style>
+/* ──────────────────────────────────────────────────────────────
+   Tokens — lifted from the Figma variables on the Hi-Fi page
+   (file zp3H9TjCyy9F9ViIescwbx · Smoly App Design)
+   ────────────────────────────────────────────────────────────── */
+:root{
+  /* colour */
+  --md-sys-color-primary:#f15a86;
+  --md-sys-color-primary-container:#fcdee7;
+  --md-sys-color-on-primary-container:#8f043f;
+  --md-sys-color-secondary-container:#e1ebfa;
+  --md-sys-color-on-secondary-container:#00458f;
+  --md-sys-color-surface:#fffdf7;
+  --md-sys-color-surface-bright:#fffdf7;
+  --md-sys-color-surface-container:#f2ede5;
+  --md-sys-color-surface-container-lowest:#ffffff;
+  --md-sys-color-on-surface:#1d1d1b;
+  --md-sys-color-on-surface-variant:#48473f;
+  --md-sys-color-outline:#79776e;
+  --md-sys-color-orange:#f58521;
+  --md-sys-color-orange-container:#fff2e9;
+  --md-sys-color-on-orange-container:#713700;
+  --md-sys-color-yellow-container:#ffdf9a;
+  --md-sys-color-on-yellow-container:#5a4300;
+  --smoly-color-button-on-filled:#ffffff;
+  --schemes-on-surface:#1d1b20;
+  --schemes-on-surface-variant:#49454f;
+  --bg-page:#ffffff;
+  --outline:#77786a;
+  --outline-variant:#c7c8b7;
+
+  /* shape */
+  --md-sys-shape-corner-small:8px;
+  --md-sys-shape-corner-medium:12px;
+  --corner-extra-large:28px;
+  --md-sys-shape-corner-full:9999px;
+
+  /* space */
+  --smoly-space-0:0px;  --smoly-space-4:4px;  --smoly-space-8:8px;
+  --smoly-space-12:12px;--smoly-space-16:16px;--smoly-space-24:24px;
+  --spacing-xs:4px;     --spacing-lg:16px;
+
+  /* type */
+  --md-ref-typeface-brand:'Cal Sans';
+  --md-ref-typeface-plain:'Mulish';
+  --md-sys-typescale-title-large-size:22px;  --md-sys-typescale-title-large-line-height:28px;  --md-sys-typescale-title-large-tracking:0px;
+  --md-sys-typescale-title-medium-size:16px; --md-sys-typescale-title-medium-line-height:24px; --md-sys-typescale-title-medium-tracking:0.15px;
+  --md-sys-typescale-body-large-size:16px;   --md-sys-typescale-body-large-line-height:24px;   --md-sys-typescale-body-large-tracking:0.5px;
+  --md-sys-typescale-body-medium-size:14px;  --md-sys-typescale-body-medium-line-height:20px;  --md-sys-typescale-body-medium-tracking:0.25px;
+  --md-sys-typescale-body-small-size:12px;   --md-sys-typescale-body-small-line-height:16px;   --md-sys-typescale-body-small-tracking:0.4px;
+  --md-sys-typescale-label-large-size:14px;  --md-sys-typescale-label-large-line-height:20px;  --md-sys-typescale-label-large-tracking:0.1px;
+  --md-sys-typescale-label-medium-size:12px; --md-sys-typescale-label-medium-line-height:16px; --md-sys-typescale-label-medium-tracking:0.5px;
+
+  /* elevation */
+  --elevation-level-2:0 1px 2px 0 rgba(0,0,0,.3), 0 2px 6px 2px rgba(0,0,0,.15);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;padding:0}
+body{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:20px;padding:32px 16px;
+  background:#eceae4;
+  font-family:var(--md-ref-typeface-plain),system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* type helpers */
+.t-title-lg{font-family:var(--md-ref-typeface-brand),var(--md-ref-typeface-plain),sans-serif;font-weight:400;
+  font-size:var(--md-sys-typescale-title-large-size);line-height:var(--md-sys-typescale-title-large-line-height);
+  letter-spacing:var(--md-sys-typescale-title-large-tracking)}
+.t-title-md{font-weight:600;font-size:var(--md-sys-typescale-title-medium-size);
+  line-height:var(--md-sys-typescale-title-medium-line-height);letter-spacing:var(--md-sys-typescale-title-medium-tracking)}
+.t-body-lg{font-weight:400;font-size:var(--md-sys-typescale-body-large-size);
+  line-height:var(--md-sys-typescale-body-large-line-height);letter-spacing:var(--md-sys-typescale-body-large-tracking)}
+.t-body-md{font-weight:400;font-size:var(--md-sys-typescale-body-medium-size);
+  line-height:var(--md-sys-typescale-body-medium-line-height);letter-spacing:var(--md-sys-typescale-body-medium-tracking)}
+.t-body-sm{font-weight:400;font-size:var(--md-sys-typescale-body-small-size);
+  line-height:var(--md-sys-typescale-body-small-line-height);letter-spacing:var(--md-sys-typescale-body-small-tracking)}
+.t-label-lg{font-weight:600;font-size:var(--md-sys-typescale-label-large-size);
+  line-height:var(--md-sys-typescale-label-large-line-height);letter-spacing:var(--md-sys-typescale-label-large-tracking)}
+.t-label-md{font-weight:600;font-size:var(--md-sys-typescale-label-medium-size);
+  line-height:var(--md-sys-typescale-label-medium-line-height);letter-spacing:var(--md-sys-typescale-label-medium-tracking)}
+
+.ms{font-family:'Material Symbols Rounded';font-weight:400;font-style:normal;
+  line-height:1;letter-spacing:normal;text-transform:none;white-space:nowrap;
+  direction:ltr;-webkit-font-feature-settings:'liga';font-variation-settings:'FILL' 0,'GRAD' 0;
+  -webkit-font-smoothing:antialiased;user-select:none}
+
+/* ── device ───────────────────────────────────────────────── */
+.device::after{content:'';position:absolute;inset:0;z-index:60;pointer-events:none;
+  border:1px solid var(--outline);border-radius:var(--corner-extra-large)}
+.device{
+  position:relative;width:390px;height:844px;flex:none;
+  border-radius:var(--corner-extra-large);
+  background:var(--md-sys-color-secondary-container);
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 18px 50px rgba(0,0,0,.13);
+}
+
+/* status bar */
+.statusbar{flex:none;height:62px;position:relative;display:flex;align-items:center;
+  padding:0 24px;color:var(--md-sys-color-on-surface)}
+.statusbar .time{font-weight:600;font-size:17px;letter-spacing:.1px;width:54px}
+.statusbar .island{position:absolute;left:50%;top:11px;transform:translateX(-50%);
+  width:125px;height:37px;border-radius:19px;background:#000}
+.statusbar .right{margin-left:auto;display:flex;align-items:center;gap:5px}
+.statusbar .right .ms{font-size:17px}
+
+/* top app bar */
+.topbar{flex:none;height:46px;display:flex;align-items:center;gap:var(--smoly-space-4);
+  padding:0 var(--smoly-space-4)}
+.topbar .title{flex:1;min-width:0;padding-left:var(--smoly-space-4);color:var(--md-sys-color-on-surface)}
+
+.icon-btn{width:40px;height:40px;flex:none;display:flex;align-items:center;justify-content:center;
+  border:0;background:transparent;border-radius:var(--md-sys-shape-corner-full);
+  color:var(--md-sys-color-on-surface-variant);cursor:pointer;padding:0}
+.icon-btn .ms{font-size:24px}
+.icon-btn:hover{background:rgba(0,0,0,.05)}
+
+/* scroll area */
+.scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.scroll::-webkit-scrollbar{width:0}
+.blue-gap{height:24px}
+.curve{display:block;width:100%;height:22px}
+.sheet-surface{background:var(--md-sys-color-surface-container-lowest);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  padding-bottom:var(--smoly-space-24);min-height:560px;padding-left:15px;padding-right:15px}
+
+.col-360{width:100%;max-width:360px;display:flex;flex-direction:column;gap:var(--spacing-lg);
+  align-items:flex-start;padding:var(--spacing-xs) 0}
+
+/* cover */
+.cover{position:relative;width:100%;max-width:360px;height:204px;border-radius:var(--corner-extra-large);
+  overflow:hidden;background:#fff}
+.cover .backing{position:absolute;inset:0 -16px 0 0;background:#eceaea}
+.cover .art{position:absolute;left:0;top:13px;width:322px;height:217px;overflow:hidden}
+.cover .art img{position:absolute;left:-1.24%;top:-4.69%;width:103.49%;height:109.38%;max-width:none;display:block}
+.cover .scrim{position:absolute;left:-3px;top:0;width:367px;height:204px;
+  background:linear-gradient(to bottom,rgba(0,0,0,0),rgba(0,0,0,.3))}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--smoly-space-8);
+  height:40px;padding:0 var(--smoly-space-16);border:0;border-radius:var(--md-sys-shape-corner-full);
+  cursor:pointer;font-family:inherit}
+.btn .ms{font-size:20px}
+.btn-tonal{background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)}
+.btn-filled{background:var(--md-sys-color-primary);color:var(--smoly-color-button-on-filled)}
+.btn-text{background:transparent;color:var(--md-sys-color-on-primary-container);height:32px;padding:0 var(--smoly-space-12)}
+.btn:active{filter:brightness(.95)}
+.cover .btn{position:absolute;left:50%;top:93px;transform:translateX(-50%)}
+
+/* text fields */
+.fields{display:flex;flex-direction:column;gap:16px;width:100%}
+.field{position:relative;display:flex;align-items:center;gap:var(--smoly-space-16);
+  height:56px;padding:0 var(--smoly-space-12);border:1px solid var(--md-sys-color-outline);
+  border-radius:4px;background:transparent}
+.field:focus-within{border-color:var(--md-sys-color-primary);box-shadow:inset 0 0 0 1px var(--md-sys-color-primary)}
+.field input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:inherit;
+  color:var(--md-sys-color-on-surface)}
+.field input::placeholder{color:var(--schemes-on-surface-variant)}
+.field .floating-label{position:absolute;left:11px;top:-9px;padding:0 4px;
+  background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface-variant)}
+
+/* sequence toggle */
+.seq{display:flex;align-items:center;justify-content:space-between;width:100%}
+.seq .meta{flex:1;min-width:0;display:flex;flex-direction:column}
+.seq .meta .t-title-md{color:var(--schemes-on-surface)}
+.seq .meta .t-body-sm{color:var(--schemes-on-surface-variant)}
+.switch{position:relative;width:52px;height:32px;flex:none;border:0;padding:0;background:transparent;cursor:pointer}
+.switch .track{position:absolute;inset:0;border-radius:16px;background:var(--md-sys-color-primary);
+  transition:background .18s ease}
+.switch .handle{position:absolute;top:4px;left:24px;width:24px;height:24px;
+  transition:left .18s ease}
+.switch .handle img{display:block;width:24px;height:24px}
+.switch[aria-checked="false"] .track{background:var(--md-sys-color-outline)}
+.switch[aria-checked="false"] .handle{left:4px}
+
+/* recording block */
+.rec-block{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:var(--smoly-space-8)}
+.rec-head{display:flex;align-items:center;height:48px;width:100%;max-width:358px}
+.rec-head .t-title-lg{flex:1;color:var(--schemes-on-surface)}
+.rec-empty{height:40px;display:flex;align-items:center;justify-content:center;
+  width:100%;max-width:224px;color:var(--schemes-on-surface-variant);text-align:center}
+.rec-list{width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px;
+  padding:var(--smoly-space-12) var(--smoly-space-0);border-radius:var(--md-sys-shape-corner-medium)}
+
+/* audio tile */
+.tile{display:flex;align-items:center;gap:var(--smoly-space-4);width:100%;position:relative}
+.tile .grip{width:30px;height:30px;flex:none;display:flex;align-items:center;justify-content:center;
+  cursor:grab;opacity:.85}
+.tile .grip img{width:20px;height:20px;display:block}
+.tile .layer{display:flex;align-items:center;justify-content:space-between;
+  background:var(--md-sys-color-surface-bright);position:relative;
+  border-radius:var(--md-sys-shape-corner-medium);padding:10px 16px;cursor:pointer;
+  transition:background .12s ease}
+.tile .layer::after{content:'';position:absolute;inset:0;pointer-events:none;
+  border:1px solid var(--md-sys-color-outline);border-radius:var(--md-sys-shape-corner-medium)}
+.tile .layer:hover{background:#f7f4ea}
+.tile--page .layer{flex:1;min-width:0}
+.tile--numbered .layer{flex:1;min-width:0;max-width:324px;padding-left:16px;padding-right:8px}
+.tile .lead{display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden}
+.tile .label{color:var(--md-sys-color-on-surface);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .play{width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;
+  border:0;padding:0;border-radius:var(--md-sys-shape-corner-full);
+  background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);cursor:pointer}
+.tile .play .ms{font-size:20px}
+.tile .chev{font-size:24px;color:var(--md-sys-color-on-surface-variant);flex:none}
+
+/* chips */
+.chip{display:inline-flex;flex:none;align-items:center;gap:var(--smoly-space-8);height:32px;
+  padding:0 var(--smoly-space-16) 0 var(--smoly-space-8);border-radius:var(--md-sys-shape-corner-small);white-space:nowrap}
+.chip .ms{font-size:18px}
+.chip--noaudio{background:var(--md-sys-color-yellow-container);color:var(--md-sys-color-on-yellow-container)}
+.chip--noaudio .ms{color:var(--md-sys-color-on-yellow-container)}
+.chip--unlinked{background:var(--md-sys-color-orange-container);color:var(--md-sys-color-on-orange-container)}
+.chip--unlinked .ms{color:var(--md-sys-color-orange)}
+
+/* row menu */
+.menu-wrap{position:relative;flex:none}
+.menu-btn{width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  border:0;background:transparent;border-radius:var(--md-sys-shape-corner-full);
+  color:var(--md-sys-color-on-surface-variant);cursor:pointer;padding:0}
+.menu-btn .ms{font-size:24px}
+.menu{position:absolute;top:44px;right:0;width:200px;z-index:20;
+  background:var(--md-sys-color-surface-container);border-radius:var(--md-sys-shape-corner-medium);
+  padding:var(--smoly-space-8) 0;box-shadow:var(--elevation-level-2);overflow:hidden}
+.menu--up{top:auto;bottom:44px}
+.menu-item{display:flex;align-items:center;gap:var(--smoly-space-12);height:48px;width:100%;
+  padding:0 var(--smoly-space-12);border:0;background:transparent;cursor:pointer;
+  font-family:inherit;text-align:left;color:var(--md-sys-color-on-surface)}
+.menu-item .ms{font-size:24px;color:var(--md-sys-color-on-surface-variant)}
+.menu-item:hover{background:rgba(0,0,0,.05)}
+
+/* navigation bar */
+.navbar{flex:none;height:80px;width:100%;display:flex;align-items:flex-end;justify-content:center;
+  padding:0 8px;background:var(--bg-page);border-top:1px solid var(--outline-variant)}
+.nav-item{flex:1;min-width:0;height:80px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:var(--smoly-space-4);padding:12px 0 16px;border:0;background:transparent;cursor:pointer;font-family:inherit}
+.nav-item .pill{width:64px;height:32px;display:flex;align-items:center;justify-content:center;
+  border-radius:var(--md-sys-shape-corner-full)}
+.nav-item .ms{font-size:24px;color:var(--md-sys-color-on-surface-variant)}
+.nav-item .t-label-md{color:var(--md-sys-color-on-surface-variant)}
+.nav-item.is-active .ms{color:var(--md-sys-color-on-secondary-container)}
+.nav-item.is-active .t-label-md{color:var(--md-sys-color-on-surface)}
+.nav-fab{position:relative;width:95px;height:95px;flex:none;border:0;background:transparent;cursor:pointer;padding:0}
+.nav-fab .ring{position:absolute;left:6.5px;top:5.5px;width:80px;height:80px;border-radius:100px;
+  border:4px solid var(--md-sys-color-surface);box-shadow:0 1px 2px 0 rgba(0,0,0,.1)}
+.nav-fab .face{position:absolute;inset:0;border-radius:100px;background:var(--md-sys-color-primary-container);
+  display:flex;flex-direction:column;align-items:center;justify-content:center}
+.nav-fab .ms{font-size:36px;color:var(--md-sys-color-primary)}
+.nav-fab .t-label-lg{color:var(--md-sys-color-primary);text-align:center;width:100%}
+
+/* ── bottom sheet ─────────────────────────────────────────── */
+.scrim-layer{position:absolute;inset:0;background:rgba(0,0,0,.32);opacity:0;pointer-events:none;
+  transition:opacity .24s ease;z-index:30}
+.scrim-layer.is-open{opacity:1;pointer-events:auto}
+.bsheet{position:absolute;left:0;right:0;bottom:0;z-index:40;
+  transform:translateY(110%);transition:transform .28s cubic-bezier(.2,.8,.25,1)}
+.bsheet.is-open{transform:translateY(0)}
+.bsheet .curve-top{display:block;width:100%;height:16px}
+.bsheet .body{background:var(--md-sys-color-surface-bright)}
+.bsheet .titlebar{display:flex;align-items:center;justify-content:space-between;
+  padding:var(--smoly-space-8) var(--smoly-space-24)}
+.bsheet .titlebar .t-title-lg{color:var(--md-sys-color-on-surface)}
+.bsheet .spacer-40{width:40px;height:40px;flex:none}
+.bsheet .inner{display:flex;flex-direction:column;padding-bottom:32px}
+.bsheet .timer{display:flex;align-items:center;justify-content:center;
+  padding:var(--smoly-space-8) var(--smoly-space-24);color:var(--md-sys-color-on-surface);
+  font-family:'Roboto',var(--md-ref-typeface-plain),sans-serif;
+  font-size:16px;line-height:24px;letter-spacing:.5px}
+.bsheet .hint{height:36px;display:flex;align-items:center;justify-content:center;
+  padding:var(--smoly-space-8) var(--smoly-space-24);color:var(--md-sys-color-on-surface-variant)}
+.bsheet .dial-row{height:110px;display:flex;align-items:flex-start;justify-content:center}
+.dial{position:relative;width:110px;height:110px;border:0;background:transparent;padding:0;cursor:pointer}
+.dial .ring{position:absolute;left:50%;top:5.5px;transform:translateX(-50%);
+  width:96px;height:96px;border-radius:120px;border:4.8px solid var(--md-sys-color-surface);
+  box-shadow:0 1.2px 4.8px 0 rgba(0,0,0,.25)}
+.dial .face{position:absolute;inset:0;border-radius:120px;background:var(--md-sys-color-primary-container);
+  display:flex;align-items:center;justify-content:center}
+.dial .ms{font-size:51.84px;color:var(--md-sys-color-primary)}
+.dial:active .face{filter:brightness(.97)}
+.dial.is-recording .face{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(241,90,134,0)}50%{box-shadow:0 0 0 10px rgba(241,90,134,.14)}}
+.bsheet .actions{display:flex;flex-direction:column;gap:var(--smoly-space-16);
+  padding:var(--smoly-space-8) var(--smoly-space-24)}
+.bsheet .actions .btn{width:100%}
+
+/* toast */
+.toast{position:absolute;left:50%;bottom:104px;transform:translate(-50%,8px);z-index:70;
+  max-width:330px;padding:12px 16px;border-radius:var(--md-sys-shape-corner-small);
+  background:#332f2b;color:#fff;box-shadow:var(--elevation-level-2);
+  opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+.toast.is-open{opacity:1;transform:translate(-50%,0)}
+
+/* caption outside the device */
+.caption{width:min(560px,100%);color:#5c5a54;font-size:13px;line-height:1.55}
+.caption b{color:#333}
+.caption code{background:#dedbd3;padding:1px 5px;border-radius:4px;font-size:12px}
+@media (max-width:440px){
+  body{padding:0;background:#fff}
+  .device{width:100vw;height:100svh;border-radius:0;box-shadow:none}
+  .device::after{display:none}
+  .caption{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="device" id="device">
+
+  <!-- status bar -->
+  <div class="statusbar">
+    <span class="time">9:41</span>
+    <span class="island"></span>
+    <span class="right">
+      <span class="ms">signal_cellular_alt</span>
+      <span class="ms">wifi</span>
+      <span class="ms">battery_full</span>
+    </span>
+  </div>
+
+  <!-- top app bar -->
+  <div class="topbar">
+    <button class="icon-btn" data-stub="Back"><span class="ms">arrow_back</span></button>
+    <span class="title t-title-lg">New book</span>
+    <button class="icon-btn" data-stub="Account"><span class="ms">person</span></button>
+  </div>
+
+  <!-- scrolling content -->
+  <div class="scroll">
+    <div class="blue-gap"></div>
+    <img class="curve" src="assets/curve-top.svg" width="390" height="22" alt="">
+    <div class="sheet-surface">
+
+      <div class="col-360">
+        <!-- cover -->
+        <div class="cover">
+          <div class="backing"></div>
+          <div class="art"><img src="assets/cover.png" alt="Book cover"></div>
+          <div class="scrim"></div>
+          <button class="btn btn-tonal t-label-lg" data-stub="Change photo">Change photo</button>
+        </div>
+
+        <!-- text fields -->
+        <div class="fields">
+          <div class="field">
+            <span class="floating-label t-body-sm">Name</span>
+            <input class="t-body-lg" type="text" placeholder="Book name" aria-label="Name">
+          </div>
+          <div class="field">
+            <span class="floating-label t-body-sm">Author</span>
+            <input class="t-body-lg" type="text" placeholder="Who’s the author of the book" aria-label="Author">
+          </div>
+        </div>
+
+        <!-- play in order -->
+        <div class="seq">
+          <div class="meta">
+            <span class="t-title-md">Play in order</span>
+            <span class="t-body-sm">Kids can play any page's audio in any order</span>
+          </div>
+          <button class="switch" id="seqSwitch" role="switch" aria-checked="true" aria-label="Play in order">
+            <span class="track"></span>
+            <span class="handle"><img src="assets/switch-handle.svg" width="24" height="24" alt=""></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- recording -->
+      <div class="rec-block">
+        <div class="rec-head">
+          <span class="t-title-lg">Recording</span>
+          <button class="btn btn-text t-label-lg" id="addBtn">Add</button>
+        </div>
+
+        <div class="rec-empty t-body-md" id="emptyNote">Nothing recorded yet.</div>
+        <button class="btn btn-filled t-label-lg" id="recordFrontBtn">
+          <span class="ms">add</span>Record Front Page
+        </button>
+
+        <div class="rec-list" id="recList" hidden></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- navigation bar -->
+  <nav class="navbar">
+    <button class="nav-item" data-stub="Home">
+      <span class="pill"><span class="ms">home</span></span>
+      <span class="t-label-md">Home</span>
+    </button>
+    <button class="nav-fab" data-stub="Create">
+      <span class="face"><span class="ms">mic</span><span class="t-label-lg">Create</span></span>
+      <span class="ring"></span>
+    </button>
+    <button class="nav-item" data-stub="Library">
+      <span class="pill"><span class="ms">auto_stories</span></span>
+      <span class="t-label-md">Library</span>
+    </button>
+  </nav>
+
+  <!-- scrim + bottom sheet -->
+  <div class="scrim-layer" id="scrim"></div>
+
+  <section class="bsheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <img class="curve-top" src="assets/sheet-curve.svg" width="390" height="16" alt="">
+    <div class="body">
+      <div class="titlebar">
+        <span class="spacer-40"></span>
+        <span class="t-title-lg" id="sheetTitle">Front Page</span>
+        <button class="icon-btn" id="sheetClose" aria-label="Close"><span class="ms">close</span></button>
+      </div>
+      <div class="inner">
+        <div class="timer" id="sheetTimer">00:00:00 / 00:20:00</div>
+        <div class="hint t-body-lg" id="sheetHint">Tap to start</div>
+        <div class="dial-row">
+          <button class="dial" id="dial" aria-label="Start recording">
+            <span class="face"><span class="ms" id="dialIcon">mic</span></span>
+            <span class="ring"></span>
+          </button>
+        </div>
+        <div class="actions" id="sheetActions" hidden>
+          <button class="btn btn-filled t-label-lg" id="recordNextBtn">Record next audio</button>
+          <button class="btn btn-tonal t-label-lg" id="linkStickerBtn">Link to a sticker</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="toast t-body-md" id="toast"></div>
+</div>
+
+<p class="caption">
+  <b>Smoly · New book</b> — built from Figma <code>node-id 509-11656</code>.
+  Interactive: record / pause / play, add pages, row menus (delete, re-record), the order switch, text fields.
+  Stubbed: <i>Link to a sticker</i>, <i>Rename</i>, <i>Move to pack</i>, <i>Change photo</i> and the nav bar — those live in other frames.
+</p>
+
+<script>
+(function(){
+  'use strict';
+
+  var MAX_SECONDS = 20 * 60;
+
+  /* ── state ─────────────────────────────────────────────── */
+  // item: { id, kind:'front'|'page', n, recorded:false }
+  var items = [];
+  var nextPage = 1;
+  var active = null;       // id of the item the sheet is showing
+  var phase  = 'idle';     // 'idle' | 'recording' | 'done'
+  var elapsed = 0;
+  var ticker = null;
+
+  /* ── elements ──────────────────────────────────────────── */
+  var recList      = document.getElementById('recList');
+  var emptyNote    = document.getElementById('emptyNote');
+  var recordFront  = document.getElementById('recordFrontBtn');
+  var addBtn       = document.getElementById('addBtn');
+  var sheet        = document.getElementById('sheet');
+  var scrim        = document.getElementById('scrim');
+  var sheetTitle   = document.getElementById('sheetTitle');
+  var sheetTimer   = document.getElementById('sheetTimer');
+  var sheetHint    = document.getElementById('sheetHint');
+  var sheetActions = document.getElementById('sheetActions');
+  var dial         = document.getElementById('dial');
+  var dialIcon     = document.getElementById('dialIcon');
+  var toastEl      = document.getElementById('toast');
+
+  /* ── helpers ───────────────────────────────────────────── */
+  function hhmmss(total){
+    var h = Math.floor(total/3600), m = Math.floor((total%3600)/60), s = total%60;
+    var p = function(v){ return (v<10?'0':'') + v; };
+    return p(h)+':'+p(m)+':'+p(s);
+  }
+  // Figma frames 207 / 210 / 213 show a bare "00:00" at rest, HH:MM:SS once running
+  function readout(total){ return total === 0 ? '00:00' : hhmmss(total); }
+  function find(id){
+    for (var i=0;i<items.length;i++) if (items[i].id===id) return items[i];
+    return null;
+  }
+  function labelOf(it){ return it.kind==='front' ? 'Front page' : '# ' + it.n; }
+  function sheetTitleOf(it){ return it.kind==='front' ? 'Front Page' : 'Recording - # ' + it.n; }
+
+  var toastTimer = null;
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('is-open');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('is-open'); }, 2200);
+  }
+
+  /* ── list rendering ────────────────────────────────────── */
+  function renderList(){
+    var hasItems = items.length > 0;
+    recList.hidden  = !hasItems;
+    emptyNote.hidden = hasItems;
+    recordFront.hidden = hasItems;
+
+    recList.textContent = '';
+
+    items.forEach(function(it){
+      var isFront = it.kind === 'front';
+
+      var row = document.createElement('div');
+      row.className = 'tile ' + (isFront ? 'tile--page' : 'tile--numbered');
+      row.dataset.id = it.id;
+
+      if (!isFront){
+        var grip = document.createElement('span');
+        grip.className = 'grip';
+        grip.innerHTML = '<img src="assets/drag-indicator.svg" width="20" height="20" alt="">';
+        row.appendChild(grip);
+      }
+
+      var layer = document.createElement('div');
+      layer.className = 'layer';
+      layer.setAttribute('role','button');
+      layer.tabIndex = 0;
+
+      var lead = document.createElement('div');
+      lead.className = 'lead';
+
+      if (it.recorded){
+        var play = document.createElement('button');
+        play.className = 'play';
+        play.setAttribute('aria-label','Play ' + labelOf(it));
+        play.innerHTML = '<span class="ms">play_arrow</span>';
+        play.addEventListener('click', function(e){
+          e.stopPropagation();
+          toast('Playing ' + labelOf(it) + ' …');
+        });
+        lead.appendChild(play);
+      }
+
+      var label = document.createElement('span');
+      label.className = 'label t-body-lg';
+      label.textContent = labelOf(it);
+      lead.appendChild(label);
+
+      var chip = document.createElement('span');
+      if (it.recorded){
+        chip.className = 'chip chip--unlinked t-label-lg';
+        chip.innerHTML = '<span class="ms">error</span>Unlinked';
+      } else {
+        chip.className = 'chip chip--noaudio t-label-lg';
+        chip.innerHTML = '<span class="ms">mic</span>No audio';
+      }
+      lead.appendChild(chip);
+      layer.appendChild(lead);
+
+      if (isFront){
+        var chev = document.createElement('span');
+        chev.className = 'ms chev';
+        chev.textContent = 'chevron_right';
+        layer.appendChild(chev);
+      } else {
+        layer.appendChild(buildMenu(it));
+      }
+
+      layer.addEventListener('click', function(){ openSheet(it.id); });
+      layer.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openSheet(it.id); }
+      });
+
+      row.appendChild(layer);
+      recList.appendChild(row);
+    });
+  }
+
+  function buildMenu(it){
+    var wrap = document.createElement('div');
+    wrap.className = 'menu-wrap';
+
+    var btn = document.createElement('button');
+    btn.className = 'menu-btn';
+    btn.setAttribute('aria-label','More options for ' + labelOf(it));
+    btn.innerHTML = '<span class="ms">menu</span>';
+
+    var menu = document.createElement('div');
+    menu.className = 'menu';
+    menu.hidden = true;
+
+    [
+      ['edit','Rename'],
+      ['mic','Re-record'],
+      ['sell','Move to pack'],
+      ['delete','Delete']
+    ].forEach(function(pair){
+      var mi = document.createElement('button');
+      mi.className = 'menu-item t-body-lg';
+      mi.innerHTML = '<span class="ms">' + pair[0] + '</span>' + pair[1];
+      mi.addEventListener('click', function(e){
+        e.stopPropagation();
+        closeAllMenus();
+        if (pair[1] === 'Delete'){
+          items = items.filter(function(x){ return x.id !== it.id; });
+          renderList();
+          toast(labelOf(it) + ' deleted');
+        } else if (pair[1] === 'Re-record'){
+          it.recorded = false;
+          renderList();
+          openSheet(it.id);
+        } else {
+          toast(pair[1] + ' lives in another frame — not in this prototype.');
+        }
+      });
+      menu.appendChild(mi);
+    });
+
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var wasOpen = !menu.hidden;
+      closeAllMenus();
+      menu.hidden = wasOpen;
+      if (!menu.hidden) flipIfClipped(btn, menu);
+    });
+
+    wrap.appendChild(btn);
+    wrap.appendChild(menu);
+    return wrap;
+  }
+
+  // open upwards when there isn't room below inside the scrolling screen
+  function flipIfClipped(btn, menu){
+    menu.classList.remove('menu--up');
+    var scroller = document.querySelector('.scroll').getBoundingClientRect();
+    var below = btn.getBoundingClientRect().bottom + 4 + menu.offsetHeight;
+    if (below > scroller.bottom) menu.classList.add('menu--up');
+  }
+
+  function closeAllMenus(){
+    var all = recList.querySelectorAll('.menu');
+    for (var i=0;i<all.length;i++) all[i].hidden = true;
+  }
+  document.addEventListener('click', closeAllMenus);
+
+  /* ── sheet ─────────────────────────────────────────────── */
+  function renderSheet(){
+    var it = find(active);
+    if (!it) return;
+
+    sheetTitle.textContent = sheetTitleOf(it);
+    sheetTimer.textContent = readout(elapsed) + ' / ' + hhmmss(MAX_SECONDS);
+
+    if (phase === 'idle'){
+      dialIcon.textContent = 'mic';
+      dial.setAttribute('aria-label','Start recording');
+      dial.classList.remove('is-recording');
+      sheetHint.textContent = 'Tap to start';
+      sheetActions.hidden = true;
+    } else if (phase === 'recording'){
+      dialIcon.textContent = 'pause';
+      dial.setAttribute('aria-label','Pause recording');
+      dial.classList.add('is-recording');
+      sheetHint.textContent = '';
+      sheetActions.hidden = true;
+    } else {
+      dialIcon.textContent = 'play_arrow';
+      dial.setAttribute('aria-label','Play back recording');
+      dial.classList.remove('is-recording');
+      sheetHint.textContent = '';
+      sheetActions.hidden = false;
+    }
+  }
+
+  function openSheet(id){
+    var it = find(id);
+    if (!it) return;
+    stopTicker();
+    active  = id;
+    elapsed = 0;
+    phase   = it.recorded ? 'done' : 'idle';
+    if (it.recorded) elapsed = it.length || 0;
+    renderSheet();
+    sheet.classList.add('is-open');
+    scrim.classList.add('is-open');
+  }
+
+  function closeSheet(){
+    stopTicker();
+    sheet.classList.remove('is-open');
+    scrim.classList.remove('is-open');
+    active = null;
+    renderList();
+  }
+
+  function startTicker(){
+    stopTicker();
+    ticker = setInterval(function(){
+      elapsed++;
+      if (elapsed >= MAX_SECONDS){ elapsed = MAX_SECONDS; finishRecording(); return; }
+      sheetTimer.textContent = readout(elapsed) + ' / ' + hhmmss(MAX_SECONDS);
+    }, 1000);
+  }
+  function stopTicker(){ if (ticker){ clearInterval(ticker); ticker = null; } }
+
+  function finishRecording(){
+    stopTicker();
+    var it = find(active);
+    if (it){ it.recorded = true; it.length = elapsed; }
+    phase = 'done';
+    renderSheet();
+    renderList();
+  }
+
+  dial.addEventListener('click', function(){
+    if (phase === 'idle'){ phase = 'recording'; renderSheet(); startTicker(); }
+    else if (phase === 'recording'){ finishRecording(); }
+    else { toast('Playing back …'); }
+  });
+
+  document.getElementById('sheetClose').addEventListener('click', closeSheet);
+  scrim.addEventListener('click', closeSheet);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && sheet.classList.contains('is-open')) closeSheet();
+  });
+
+  document.getElementById('recordNextBtn').addEventListener('click', function(){
+    var it = addPage();
+    renderList();
+    openSheet(it.id);
+  });
+
+  document.getElementById('linkStickerBtn').addEventListener('click', function(){
+    closeSheet();
+    toast('Sticker linking lives in the bulk-linking flow — not in this prototype.');
+  });
+
+  /* ── adding items ──────────────────────────────────────── */
+  var uid = 0;
+  function addFront(){
+    var it = { id:'i'+(++uid), kind:'front', recorded:false };
+    items.push(it);
+    return it;
+  }
+  function addPage(){
+    var it = { id:'i'+(++uid), kind:'page', n:nextPage++, recorded:false };
+    items.push(it);
+    return it;
+  }
+
+  recordFront.addEventListener('click', function(){
+    var it = addFront();
+    renderList();
+    openSheet(it.id);
+  });
+
+  addBtn.addEventListener('click', function(){
+    var it = items.length === 0 ? addFront() : addPage();
+    renderList();
+    toast(labelOf(it) + ' added');
+  });
+
+  /* ── switch ────────────────────────────────────────────── */
+  var seqSwitch = document.getElementById('seqSwitch');
+  seqSwitch.addEventListener('click', function(){
+    var on = seqSwitch.getAttribute('aria-checked') === 'true';
+    seqSwitch.setAttribute('aria-checked', on ? 'false' : 'true');
+  });
+
+  /* ── stubs ─────────────────────────────────────────────── */
+  var stubs = document.querySelectorAll('[data-stub]');
+  for (var i=0;i<stubs.length;i++){
+    (function(el){
+      el.addEventListener('click', function(){
+        toast(el.dataset.stub + ' isn’t part of this screen’s prototype.');
+      });
+    })(stubs[i]);
+  }
+
+  renderList();
+})();
+</script>
+</body>
+</html>

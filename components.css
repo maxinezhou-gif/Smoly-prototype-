@@ -1,0 +1,465 @@
+/* ============================================================
+   Smoly — components
+   Transcribed from the Smoly Material Library component set.
+   Class names map onto the Figma component + variant names.
+
+   Figma                                   CSS
+   Button · Size=Small, Style=Filled        .md-btn.md-btn--sm.md-btn--filled
+   Button · Size=XSmall, Style=Text         .md-btn.md-btn--xs.md-btn--text
+   Button · Size=Medium, Style=Tonal        .md-btn.md-btn--md.md-btn--tonal
+   Text field · Style=Outlined              .md-field
+   Switch · Selected=True                   .md-switch[aria-checked="true"]
+   Status chip · Property 1=No audio        .sm-chip.sm-chip--no-audio
+   Audio tile · Property 1=Front page       .sm-tile.sm-tile--front
+   Audio tile · Property 1=Audio tile       .sm-tile.sm-tile--numbered
+   Audio tile · Property 1=Variant3/4       .sm-tile.is-expanded
+   Customised bottom sheet                  .md-sheet
+   Menu / Menu item                         .md-menu / .md-menu-item
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+/* ── Button ───────────────────────────────────────────────── */
+.md-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  border-radius: var(--md-sys-shape-corner-full);
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--md-ref-typeface-plain), system-ui, sans-serif;
+  transition: background-color .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.md-btn:disabled { opacity: .38; cursor: default; }
+
+/* sizes — height / padding / gap / label style straight from the library */
+.md-btn--xs { height: 32px; padding-inline: var(--smoly-space-12); gap: var(--smoly-space-4);
+              font: 600 14px/20px inherit; letter-spacing: .1px; }
+.md-btn--sm { height: 40px; padding-inline: var(--smoly-space-16); gap: var(--smoly-space-8);
+              font: 600 14px/20px inherit; letter-spacing: .1px; }
+.md-btn--md { height: 56px; padding-inline: var(--smoly-space-24); gap: var(--smoly-space-8);
+              font: 600 16px/24px inherit; letter-spacing: .15px; }
+.md-btn--xs .ms, .md-btn--sm .ms { font-size: 20px; }
+.md-btn--md .ms { font-size: 24px; }
+
+/* styles */
+.md-btn--filled   { background: var(--md-sys-color-primary); color: var(--smoly-color-button-on-filled); }
+.md-btn--filled:not(:disabled):active   { background: #d8406d; }
+.md-btn--tonal    { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.md-btn--tonal:not(:disabled):active    { background: #cfe0f6; }
+.md-btn--text     { background: none; color: var(--md-sys-color-on-primary-container); }
+.md-btn--text:not(:disabled):active     { background: rgba(143, 4, 63, .08); }
+.md-btn--outlined { background: none; color: var(--md-sys-color-on-primary-container);
+                    border: 1px solid var(--md-sys-color-outline); }
+
+.md-btn--block { width: 100%; }
+
+/* ── Icon button (Small · 40, 24px icon) ──────────────────── */
+.md-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border: 0;
+  background: none;
+  border-radius: var(--md-sys-shape-corner-full);
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+.md-iconbtn .ms { font-size: 24px; }
+.md-iconbtn:not(:disabled):active { background: rgba(29, 29, 27, .08); }
+.md-iconbtn:disabled { opacity: .38; cursor: default; }
+/* XSmall · 32 with a 20px icon — used inside the expanded audio tile */
+.md-iconbtn--xs { width: 32px; height: 32px; }
+.md-iconbtn--xs .ms { font-size: 20px; }
+.md-iconbtn--tonal { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+
+/* ── Text field · Outlined ────────────────────────────────── */
+.md-field { position: relative; display: flex; flex-direction: column; gap: 4px; width: 100%; }
+.md-field__box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--smoly-space-16);
+  height: 56px;
+  padding-inline: var(--smoly-space-12);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-extra-small);
+}
+.md-field__input {
+  flex: 1 0 0;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  padding: 0;
+  color: var(--md-sys-color-on-surface);
+  font: 400 16px/24px var(--md-ref-typeface-plain), system-ui, sans-serif;
+  letter-spacing: .5px;
+}
+.md-field__input::placeholder { color: var(--md-sys-color-on-surface-variant); }
+/* Floating label sits on the outline — its backdrop must match the surface behind */
+.md-field__label {
+  position: absolute;
+  left: 11px;
+  top: -9px;
+  padding-inline: 4px;
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface-variant);
+  font: 400 12px/16px var(--md-ref-typeface-plain), system-ui, sans-serif;
+  letter-spacing: .4px;
+  pointer-events: none;
+}
+.md-field__box:focus-within { border: 2px solid var(--md-sys-color-primary); padding-inline: 11px; }
+.md-field__box:focus-within .md-field__label { color: var(--md-sys-color-primary); left: 10px; }
+
+/* ── Switch · 52×32 ───────────────────────────────────────── */
+.md-switch {
+  position: relative;
+  width: 52px;
+  height: 32px;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: var(--md-sys-color-surface-container-highest);
+  box-shadow: inset 0 0 0 2px var(--md-sys-color-outline);
+  cursor: pointer;
+  transition: background-color .2s ease, box-shadow .2s ease;
+}
+.md-switch__handle {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 24px;
+  height: 24px;
+  transition: left .2s cubic-bezier(.2, 0, 0, 1);
+}
+.md-switch[aria-checked="true"] { background: var(--md-sys-color-primary); box-shadow: none; }
+.md-switch[aria-checked="true"] .md-switch__handle { left: 24px; }
+
+/* ── Top app bar · Small 64 ───────────────────────────────── */
+.md-appbar {
+  display: flex;
+  align-items: center;
+  gap: var(--smoly-space-4);
+  height: 64px;
+  width: 100%;
+  padding-inline: var(--smoly-space-4);
+  background: var(--md-sys-color-secondary-container);
+  flex: none;
+}
+.md-appbar__title {
+  flex: 1 0 0;
+  min-width: 0;
+  padding-left: var(--smoly-space-4);
+  color: var(--md-sys-color-on-surface);
+  font: 400 22px/28px var(--md-ref-typeface-brand), var(--md-ref-typeface-plain), system-ui, sans-serif;
+}
+
+/* ── Navigation bar · 80 ──────────────────────────────────── */
+.md-navbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 80px;
+  width: 100%;
+  padding-inline: 8px;
+  background: var(--bg-page);
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  flex: none;
+}
+.md-nav-item {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--smoly-space-4);
+  height: 80px;
+  padding-top: 12px;
+  padding-bottom: 16px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--md-sys-color-on-surface-variant);
+}
+.md-nav-item__indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 32px;
+  border-radius: var(--md-sys-shape-corner-full);
+}
+.md-nav-item__indicator .ms { font-size: 24px; }
+.md-nav-item__label { font: 600 12px/16px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .5px; }
+.md-nav-item[aria-current="page"] { color: var(--md-sys-color-on-surface); }
+/* the destination icon stays on-surface-variant in every state — only the
+   label darkens for the current item */
+.md-nav-item__indicator .ms { color: var(--md-sys-color-on-surface-variant); }
+
+/* Centre "Create" control — 95 box holding an 80 ring that overhangs the bar */
+.smoly-fab { position: relative; width: 95px; height: 95px; flex: none; margin-top: -15px; }
+.smoly-fab__ring {
+  position: absolute;
+  left: 6.5px;
+  top: 5.5px;
+  width: 80px;
+  height: 80px;
+  border: 4px solid var(--md-sys-color-surface);
+  border-radius: 100px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+}
+.smoly-fab__inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 100px;
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+}
+.smoly-fab__inner .ms { font-size: 36px; }
+.smoly-fab__label { font: 600 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .1px; }
+
+/* ── Status chip · 32, corner/small ───────────────────────── */
+.sm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--smoly-space-8);
+  height: 32px;
+  flex: none;
+  padding-left: var(--smoly-space-8);
+  padding-right: var(--smoly-space-16);
+  border-radius: var(--md-sys-shape-corner-small);
+  font: 600 14px/20px var(--md-ref-typeface-plain), system-ui, sans-serif;
+  letter-spacing: .1px;
+}
+.sm-chip .ms { font-size: 18px; }
+.sm-chip--no-audio { background: var(--md-sys-color-yellow-container);    color: var(--md-sys-color-on-yellow-container); }
+.sm-chip--no-audio .ms { color: var(--md-sys-color-on-yellow-container); }
+.sm-chip--unlinked { background: var(--md-sys-color-orange-container);    color: var(--md-sys-color-on-orange-container); }
+.sm-chip--unlinked .ms { color: var(--md-sys-color-orange); }
+.sm-chip--linked   { background: var(--md-sys-color-tertiary-container);  color: var(--md-sys-color-on-tertiary-container); }
+.sm-chip--linked .ms { color: var(--md-sys-color-tertiary); }
+
+/* ── Audio tile ───────────────────────────────────────────── */
+.sm-tile { display: flex; align-items: center; gap: var(--smoly-space-4); width: 358px; }
+.sm-tile__handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border: 0;
+  background: none;
+  cursor: grab;
+  padding: 0;
+}
+.sm-tile__handle img { width: 20px; height: 20px; display: block; }
+.sm-tile__card {
+  display: flex;
+  flex: 1 0 0;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 10px var(--smoly-space-16);
+  background: var(--md-sys-color-surface-bright);
+  /* an inset ring, not a border: the tile's height is content-driven, and a
+     1px border would make it 54/138 where Figma's inside stroke gives 52/136 */
+  box-shadow: inset 0 0 0 1px var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-medium);
+  text-align: left;
+  font-family: inherit;
+}
+/* 32 tall collapsed: 10 + 32 + 10 = the 52 in Figma */
+.sm-tile__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  flex: none;
+}
+.sm-tile__head--tappable { cursor: pointer; }
+.sm-tile__main { display: flex; align-items: center; gap: var(--smoly-space-8); min-width: 0; }
+.sm-tile__name {
+  color: var(--md-sys-color-on-surface);
+  font: 400 16px/24px var(--md-ref-typeface-plain), system-ui, sans-serif;
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+.sm-tile__more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 28px;
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+}
+.sm-tile__more .ms { font-size: 20px; }
+
+/* expanded — the card grows a player below the head row.
+   12 (gap) + 72 (player) = the 136 tall Variant3 in Figma. */
+.sm-tile__player-wrap {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .3s ease-out;
+}
+.sm-tile.is-expanded .sm-tile__player-wrap { max-height: 84px; }
+/* a numbered tile's drag handle stays level with the head row once expanded */
+.sm-tile.is-expanded { align-items: flex-start; }
+.sm-tile.is-expanded .sm-tile__handle { margin-top: 11px; }
+
+.sm-player { display: flex; flex-direction: column; gap: var(--smoly-space-4); padding-block: var(--smoly-space-8); margin-top: var(--smoly-space-12); }
+.sm-player__track-wrap { position: relative; padding: 4px 2px; }
+.sm-player__track { height: 4px; border-radius: 100px; background: var(--smoly-color-pressed-surface-container-high); }
+.sm-player__thumb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  transform: translateY(-50%);
+  display: block;
+}
+.sm-player__meta { display: flex; flex-direction: column; }
+.sm-player__times {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 16px;
+  margin-bottom: -8px;   /* Figma overlaps the times into the transport row */
+  color: var(--md-sys-color-on-surface-variant);
+  font: 600 11px/16px var(--md-ref-typeface-plain), system-ui, sans-serif;
+  letter-spacing: .5px;
+}
+.sm-player__transport { display: flex; align-items: center; justify-content: center; gap: var(--smoly-space-8); height: 32px; }
+.sm-player__transport .md-iconbtn { color: var(--md-sys-color-on-surface); }
+.sm-player__transport .md-iconbtn--tonal { color: var(--md-sys-color-on-secondary-container); }
+
+/* ── Bottom sheet ─────────────────────────────────────────── */
+.md-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--md-sys-color-scrim);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease-out;
+  z-index: 5;
+}
+.md-scrim.is-open { opacity: .32; pointer-events: auto; }
+
+.md-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  transform: translateY(110%);
+  transition: transform .3s ease-out;
+}
+.md-sheet.is-open { transform: translateY(0); }
+.md-sheet__cap { display: block; width: 100%; height: 16px; }
+.md-sheet__body { background: var(--md-sys-color-surface-bright); }
+.md-sheet__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 8px var(--smoly-space-24);
+}
+.md-sheet__title {
+  color: var(--md-sys-color-on-surface);
+  font: 400 22px/28px var(--md-ref-typeface-brand), var(--md-ref-typeface-plain), system-ui, sans-serif;
+}
+.md-sheet__slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--smoly-space-16);
+  padding: 0 var(--smoly-space-16) var(--smoly-space-24);
+}
+
+/* visual block — waveform + timer */
+.sheet-visual { display: flex; flex-direction: column; align-items: center; gap: 16px; padding-block: var(--smoly-space-8); }
+.sheet-visual__stage { display: flex; align-items: center; justify-content: center; height: 40px; width: 100%; }
+.sheet-visual__caption { padding: 8px var(--smoly-space-24); color: var(--md-sys-color-on-surface); font: 400 12px/16px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .4px; }
+.sheet-visual__hint    { padding: 8px var(--smoly-space-24); color: var(--md-sys-color-on-surface-variant); font: 400 12px/16px var(--md-ref-typeface-plain), system-ui, sans-serif; letter-spacing: .4px; }
+
+/* transport row */
+/* 110 tall exactly — the dial defines the height and overflows the frame's 8px padding */
+.sheet-transport { display: flex; align-items: center; justify-content: center; gap: var(--smoly-space-40); height: 110px; }
+.sheet-actions   { display: flex; flex-direction: column; gap: var(--smoly-space-16); padding-block: var(--smoly-space-8); }
+
+/* the dial — 110 box, 96 ring */
+.sm-dial { position: relative; width: 110px; height: 110px; flex: none; border: 0; background: none; padding: 0; cursor: pointer; }
+.sm-dial__ring {
+  position: absolute;
+  left: 50%;
+  top: 5.5px;
+  width: 96px;
+  height: 96px;
+  margin-left: -48px;
+  border: 4.8px solid var(--md-sys-color-surface);
+  border-radius: 120px;
+  box-shadow: 0 1.2px 4.8px 0 rgba(0, 0, 0, .25);
+}
+.sm-dial__inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 120px;
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-primary);
+}
+.sm-dial__inner .ms { font-size: 36px; }
+
+/* ── Menu ─────────────────────────────────────────────────── */
+.md-menu {
+  position: absolute;
+  z-index: 7;
+  width: 200px;
+  padding-block: var(--smoly-space-8);
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--md-sys-shape-corner-medium);
+  box-shadow: var(--elevation-level-2);
+  transform-origin: top right;
+}
+.md-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--smoly-space-12);
+  width: 100%;
+  height: 48px;
+  padding-inline: var(--smoly-space-12);
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--md-sys-color-on-surface);
+  font: 400 16px/24px var(--md-ref-typeface-plain), system-ui, sans-serif;
+  letter-spacing: .5px;
+}
+.md-menu-item .ms { font-size: 24px; color: var(--md-sys-color-on-surface-variant); }
+.md-menu-item:active { background: var(--md-sys-color-surface-container-high); }
+.md-menu-item--danger,
+.md-menu-item--danger .ms { color: var(--md-sys-color-error); }
